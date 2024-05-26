@@ -28,10 +28,10 @@ const Login = () => {
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Conta</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username</label>
+          <label>Nome</label>
           <input
             type="text"
             value={username}
@@ -40,7 +40,7 @@ const Login = () => {
           />
         </div>
         <div>
-          <label>Password</label>
+          <label>Senha</label>
           <input
             type="password"
             value={password}
@@ -48,7 +48,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Entrar</button>
       </form>
       <ToastContainer />
     </div>

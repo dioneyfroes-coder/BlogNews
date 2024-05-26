@@ -18,9 +18,9 @@ Instruções de Instalação:
 4. Inicie o servidor de desenvolvimento com o comando `npm run dev` ou `yarn dev`.
 
 Estrutura do Projeto:
-- `pages/`: Contém as páginas da aplicação.
+- `app/`: Contém as páginas da aplicação.
 - `components/`: Contém os componentes reutilizáveis da aplicação.
-- `api/`: Contém as rotas da API.
+- `pages/`: Contém as rotas da API.
 - `lib/`: Contém funções e utilitários.
 - `models/`: Contém os modelos de dados MongoDB.
 

@@ -25,21 +25,21 @@ const Header = () => {
           <Link href="/">Home</Link>
         </Typography>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Link href="/about">About</Link>
+          <Link href="/about">Sobre</Link>
         </Typography>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Link href="/contact">Contact</Link>
+          <Link href="/contact">Contato</Link>
         </Typography>
         {session ? (
           <>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link href="/admin">Admin</Link>
             </Typography>
-            <Button color="inherit" onClick={() => signOut()}>Logout</Button>
+            <Button color="inherit" onClick={() => signOut()}>Sair</Button>
           </>
         ) : (
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/login">Login</Link>
+            <Link href="/login">Entrar</Link>
           </Typography>
         )}
       </Toolbar>
