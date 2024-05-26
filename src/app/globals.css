@@ -84,35 +84,75 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family: Arial, sans-serif;
   max-width: 100vw;
+  background-color: #F7F7F7;
+  color: #191919;
+  font-family: 'Times New Roman', Times, serif;
   overflow-x: hidden;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 main {
+  margin: 0 auto; /* Centraliza o conteúdo horizontalmente */
+  max-width: 800px; /* Define a largura máxima para evitar que o texto fique muito largo em telas grandes */
+  padding: 20px; /* Adiciona espaçamento interno */
+  line-height: 1.6; /* Define a altura da linha para melhor legibilidade */
   flex: 1;
 }
 
+/* Adiciona espaçamento entre parágrafos */
+main p {
+  margin-bottom: 15px;
+}
+
+/* Estiliza os títulos dos posts */
+main h1, main h2, main h3 {
+  margin-top: 30px; /* Adiciona espaçamento acima dos títulos */
+}
+
+/* Torna as imagens responsivas dentro do conteúdo */
+main img {
+  max-width: 100%; /* Garante que as imagens não ultrapassem a largura do conteúdo */
+  height: auto; /* Mantém a proporção da imagem */
+}
+
+/* Torna os vídeos responsivos dentro do conteúdo */
+main iframe {
+  max-width: 100%; /* Garante que os vídeos não ultrapassem a largura do conteúdo */
+}
+
+
 a {
-  color: inherit;
+  color:  #000000;
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+ul {
+  list-style: none;
+  padding-left: 0; /* Isso remove o recuo padrão das listas não ordenadas */
+}
+
+ol {
+  list-style: none;
+  padding-left: 0; /* Isso remove o recuo padrão das listas ordenadas */
+}
+
+#blog-container {
+  margin: 0 auto;
+  max-width: 800px; /* Ajuste conforme necessário */
+  padding-top: 10px; 
+  padding-bottom: 20px; 
+  padding-left: 20px; /* Padding lateral esquerdo */
+  padding-right: 20px; /* Padding lateral direito */
+  border-radius: 8px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza verticalmente */
+  align-items: center; /* Centraliza horizontalmente */
+}
+
+@media (max-width: 768px) {
+  #blog-container {
+    max-width: 90%; /* Ajuste conforme necessário */
   }
 }

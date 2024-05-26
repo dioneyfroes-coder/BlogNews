@@ -1,69 +1,97 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import CreatePost from '@/components/CreatePost';
+import EditPost from '@/components/EditPost';
+import DeletePost from '@/components/DeletePost';
+import PostSelector from '@/components/PostSelector';
+import styles from './Admin.module.css';
 
 const Admin = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [message, setMessage] = useState('');
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showEditMenu, setShowEditMenu] = useState(false);
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      signIn();
+    } else if (status === 'authenticated' && !['admin', 'editor', 'redator'].includes(session.user.role)) {
+      toast.error('Access denied');
+      router.push('/');
+    } else if (status === 'authenticated') {
+      fetchPosts();
+    }
+  }, [status, session, router]);
+
+  const fetchPosts = async () => {
     try {
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, content, author }),
-      });
-
-      if (res.ok) {
-        setMessage('Postagem criada com sucesso!');
-        setTitle('');
-        setContent('');
-        setAuthor('');
-      } else {
-        const errorData = await res.json();
-        setMessage(`Erro ao criar a postagem: ${errorData.error}`);
+      const res = await fetch('/api/posts');
+      if (!res.ok) {
+        throw new Error('Failed to fetch posts');
       }
+      const data = await res.json();
+      setPosts(data.data);
+      setLoading(false);
     } catch (error) {
-      console.error(error);
-      setMessage('Erro ao criar a postagem.');
+      console.error('Error fetching posts:', error);
+      toast.error('Failed to load posts');
+      setLoading(false);
     }
   };
 
+  const handleCreateClick = () => {
+    setShowCreateForm(true);
+    setShowEditMenu(false);
+    setShowDeleteMenu(false);
+  };
+
+  const handleEditClick = () => {
+    setShowEditMenu(true);
+    setShowCreateForm(false);
+    setShowDeleteMenu(false);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteMenu(true);
+    setShowCreateForm(false);
+    setShowEditMenu(false);
+  };
+
+  const handlePostSelect = (e) => {
+    setSelectedPostId(e.target.value);
+  };
+
   return (
-    <div>
-      <h1>Página de Administração</h1>
-      <form onSubmit={handleSubmit}>
+    <div className={styles.adminContainer}>
+      <h1 className={styles.adminHeader}>Página de Administração</h1>
+      <div className={styles.buttonGroup}>
+        <button onClick={handleCreateClick}>Criar Post</button>
+        <button onClick={handleEditClick}>Editar Post</button>
+        <button onClick={handleDeleteClick}>Excluir Post</button>
+      </div>
+      {showCreateForm && <CreatePost />}
+      {showEditMenu && (
         <div>
-          <label>Título</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <h2>Selecionar Post para Editar</h2>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <EditPost postId={selectedPostId} />}
         </div>
+      )}
+      {showDeleteMenu && (
         <div>
-          <label>Conteúdo</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <h2>Selecionar Post para Excluir</h2>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <DeletePost postId={selectedPostId} />}
         </div>
-        <div>
-          <label>Autor</label>
-          <input
-            type="text"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </div>
-        <button type="submit">Criar Postagem</button>
-      </form>
-      {message && <p>{message}</p>}
+      )}
     </div>
   );
 };

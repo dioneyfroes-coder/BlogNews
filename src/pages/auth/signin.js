@@ -8,4 +8,4 @@ export default function SignIn() {
       <button type="submit">Sign in</button>
     </form>
   );
-}
+};

@@ -1,15 +1,16 @@
-// app/page.js
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
 
 export default async function Home() {
   await dbConnect();
-
   const posts = await Post.find({}).sort({ createdAt: -1 }).lean();
   
   return (
     <div>
-      <h1>Blog de Notícias</h1>
+      <div id="blog-container">
+        <h1>Blog News</h1>
+      </div>
+
       <ul>
         {posts.map(post => (
           <li key={post._id}>
