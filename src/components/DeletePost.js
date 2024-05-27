@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import HelpBalloon from './HelpBallon';
 
 const DeletePost = ({ postId }) => {
   const router = useRouter();
@@ -43,6 +44,7 @@ const DeletePost = ({ postId }) => {
       <button onClick={handleDelete} disabled={loading}>
         {loading ? 'Deleting...' : 'Delete Post'}
       </button>
+      <HelpBalloon message="A exclusão de posts é irreversível e pode levar alguns minutos para refletir nas alterações. Tem certeza que deseja continuar?" />
     </div>
   );
 };

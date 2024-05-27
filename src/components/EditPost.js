@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+import HelpBalloon from './HelpBallon';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const EditPost = ({ postId }) => {
   const router = useRouter();
@@ -25,9 +30,6 @@ const EditPost = ({ postId }) => {
     const fetchPost = async () => {
       try {
         const res = await fetch(`/api/posts/${postId}`);
-        if (!res.ok) {
-          throw new Error('Failed to fetch post');
-        }
         const data = await res.json();
         if (data.success) {
           setPost(data.data);
@@ -88,9 +90,26 @@ const EditPost = ({ postId }) => {
       </div>
       <div>
         <label>Conteúdo</label>
-        <textarea
+        <ReactQuill
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={setContent}
+          modules={{
+            toolbar: [
+              [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+              [{ size: [] }],
+              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+              [{ 'list': 'ordered' }, { 'list': 'bullet' },
+              { 'indent': '-1' }, { 'indent': '+1' }],
+              ['link', 'image', 'video'],
+              ['clean']
+            ],
+          }}
+          formats={[
+            'header', 'font', 'size',
+            'bold', 'italic', 'underline', 'strike', 'blockquote',
+            'list', 'bullet', 'indent',
+            'link', 'image', 'video'
+          ]}
         />
       </div>
       <div>
@@ -102,6 +121,7 @@ const EditPost = ({ postId }) => {
         />
       </div>
       <button type="submit">Editar Postagem</button>
+      <HelpBalloon message="Pode levar alguns minutos para as alterações terem efeito." />
     </form>
   );
 };

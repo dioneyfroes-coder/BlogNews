@@ -4,6 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
@@ -46,32 +50,55 @@ const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={handleCreate}>
-      <div>
-        <label>Título</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Conteúdo</label>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Autor</label>
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </div>
-      <button type="submit">Criar Postagem</button>
-    </form>
+    <div>
+      <h1>Criar Post</h1>
+      <form onSubmit={handleCreate}>
+        <div>
+          <label>Título</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Conteúdo</label>
+          <ReactQuill
+            value={content}
+            onChange={(value) => setContent(value)}
+            modules={{
+              toolbar: [
+                [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                [{size: []}],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, 
+                 {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image', 'video'],
+                ['clean']                                         
+              ],
+            }}
+            formats={[
+              'header', 'font', 'size',
+              'bold', 'italic', 'underline', 'strike', 'blockquote',
+              'list', 'bullet', 'indent',
+              'link', 'image', 'video'
+            ]}
+            placeholder="Escreva o conteúdo aqui..."
+          />
+        </div>
+        <div>
+          <label>Autor</label>
+          <input
+            type="text"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Criar Postagem</button>
+      </form>
+    </div>
   );
 };
 

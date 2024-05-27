@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
 import { getToken } from 'next-auth/jwt';
+import sanitizeHtml from 'sanitize-html';
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -10,6 +11,20 @@ export default async function handler(req, res) {
   if (!token || !['admin', 'editor', 'redator'].includes(token.role)) {
     return res.status(401).json({ success: false, error: 'Não autorizado' });
   }
+
+  // Função para sanitizar dados, permitindo vídeos do YouTube
+  const sanitizeInput = (input) => {
+    return sanitizeHtml(input, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'iframe', 'div', 'pre', 'ul', 'ol', 'li', 'a', 'b', 'i', 'u', 's', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]),
+      allowedAttributes: {
+        ...sanitizeHtml.defaults.allowedAttributes,
+        img: [ 'src', 'alt' ],
+        a: [ 'href' ],
+        iframe: [ 'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen' ]
+      },
+      allowedIframeHostnames: ['www.youtube.com', 'youtube.com', 'www.youtu.be', 'youtu.be']
+    });
+  };
 
   switch (req.method) {
     case 'GET':
@@ -24,7 +39,11 @@ export default async function handler(req, res) {
     case 'POST':
       try {
         const { title, content, author } = req.body;
-        const post = new Post({ title, content, author });
+        const sanitizedTitle = sanitizeInput(title);
+        const sanitizedContent = sanitizeInput(content);
+        const sanitizedAuthor = sanitizeInput(author);
+
+        const post = new Post({ title: sanitizedTitle, content: sanitizedContent, author: sanitizedAuthor });
         await post.save();
         res.status(201).json({ success: true, data: post });
       } catch (error) {
@@ -39,9 +58,9 @@ export default async function handler(req, res) {
         if (!post) {
           return res.status(404).json({ success: false, error: 'Post não encontrado' });
         }
-        post.title = title;
-        post.content = content;
-        post.author = author;
+        post.title = sanitizeInput(title);
+        post.content = sanitizeInput(content);
+        post.author = sanitizeInput(author);
         await post.save();
         res.status(200).json({ success: true, data: post });
       } catch (error) {

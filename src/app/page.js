@@ -1,25 +1,23 @@
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
+import Home from '@/components/Home';
 
-export default async function Home() {
+export const dynamic = 'force-dynamic'; // Para garantir renderização dinâmica
+
+export default async function Page() {
   await dbConnect();
-  const posts = await Post.find({}).sort({ createdAt: -1 }).lean();
-  
-  return (
-    <div>
-      <div id="blog-container">
-        <h1>Blog News</h1>
-      </div>
 
-      <ul>
-        {posts.map(post => (
-          <li key={post._id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <small>By {post.author}</small>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  const posts = await Post.find({}).sort({ createdAt: -1 }).lean();
+  posts.forEach(post => {
+    post._id = post._id.toString();
+    post.createdAt = post.createdAt.toString();
+    post.updatedAt = post.updatedAt ? post.updatedAt.toString() : null;
+    if (post.comments) {
+      post.comments.forEach(comment => {
+        comment._id = comment._id.toString();
+      });
+    }
+  });
+
+  return <Home initialPosts={posts} />;
 }

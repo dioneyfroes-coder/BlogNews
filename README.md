@@ -29,6 +29,8 @@ Tecnologias Utilizadas:
 - React
 - MongoDB
 - NextAuth.js
+- Material UI
+- Toast
 
 Autor:
 dioney froes januario
@@ -39,3 +41,23 @@ Este projeto está licenciado sob a Licença Creative Commons Atribuição-NãoC
 Isso significa que você tem permissão para usar, copiar, distribuir e modificar o projeto, desde que não o utilize para fins comerciais.
 Para qualquer uso comercial do projeto, entre em contato com o autor para obter permissão.
 
+## Versão 1.3 (27 de Maio de 2024)
+
+### Alterações
+- Atualização do componente Home para lidar com likes e comentários de forma dinâmica.
+- Correção de erros relacionados à renderização de posts e comentários.
+- Adição de verificação para a existência de `comments` antes de iterar sobre eles.
+
+## Versão 1.2 (20 de Maio de 2024)
+
+### Alterações
+- Introdução da função de envio de comentários por e-mail.
+- Estilização das tags para uma melhor experiência de usuário.
+- Adicionado suporte para formatação de texto nos posts usando Quill.
+
+## Versão 1.1 (15 de Maio de 2024)
+
+### Alterações
+- Implementação de um componente de balão de aviso para exclusão de posts.
+- Melhoria da experiência do criador e editor de posts com a adição do editor Quill.
+- Configuração da API para permitir a formatação de texto nos posts e a inclusão de vídeos do YouTube.

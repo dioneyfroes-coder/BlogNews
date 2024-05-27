@@ -20,11 +20,14 @@
     "next": "14.2.3",
     "next-auth": "^4.24.7",
     "nodemailer": "^6.9.13",
+    "quill": "^2.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-quill": "^2.0.0",
     "react-toastify": "^10.0.5",
     "react-virtualized": "^9.22.5",
-    "react-window": "^1.8.10"
+    "react-window": "^1.8.10",
+    "sanitize-html": "^2.13.0"
   },
   "devDependencies": {
     "eslint": "^8",

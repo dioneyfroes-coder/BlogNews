@@ -136,6 +136,10 @@ ol {
   padding-left: 0; /* Isso remove o recuo padrão das listas ordenadas */
 }
 
+.container {
+  padding: 20px;
+}
+
 #blog-container {
   margin: 0 auto;
   max-width: 800px; /* Ajuste conforme necessário */
@@ -213,4 +217,27 @@ margin-bottom: 10px;
 transition: border-color 0.3s;
 min-height: 150px; /* Altura mínima */
 resize: vertical, horizontal; /* Permitir redimensionamento vertical */
+};
+
+p {
+  text-indent: 2em; /* Adiciona um recuo de 2em no início de cada parágrafo */
+};
+
+.ql-editor p {
+  text-indent: 2em; /* ou qualquer valor que você preferir */
+};
+
+img {
+  max-width: 300px;
+  height: 300px;
+  display: block;
+  margin: 0 auto;
+};
+
+/* Definindo estilo global para vídeos embutidos (iframe) */
+iframe {
+  max-width: 300px;
+  height: 300px;
+  display: block;
+  margin: 0 auto;
 };

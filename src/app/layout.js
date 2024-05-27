@@ -1,9 +1,9 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ErrorBoundary from "@/components/ErrorBoundary";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
