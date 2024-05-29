@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import HelpBalloon from './HelpBallon';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@mui/material';
 
 const DeletePost = ({ postId }) => {
   const router = useRouter();
@@ -40,12 +47,30 @@ const DeletePost = ({ postId }) => {
   };
 
   return (
-    <div>
-      <button onClick={handleDelete} disabled={loading}>
-        {loading ? 'Deleting...' : 'Delete Post'}
-      </button>
-      <HelpBalloon message="A exclusão de posts é irreversível e pode levar alguns minutos para refletir nas alterações. Tem certeza que deseja continuar?" />
-    </div>
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Deletar Post Selecionado ?
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleDelete}
+          disabled={loading}
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {loading ? <CircularProgress size={24} /> : 'Deletar'}
+        </Button>
+        <HelpBalloon message="A exclusão de posts é irreversível e pode levar alguns minutos para refletir nas alterações. Tem certeza que deseja continuar?" />
+      </Box>
+    </Container>
   );
 };
 

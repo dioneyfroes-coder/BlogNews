@@ -1,10 +1,9 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { Box, Typography, TextField, Button, Container } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
-import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import HelpBalloon from './HelpBallon';
 
@@ -18,6 +17,7 @@ const EditPost = ({ postId }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
+  const quillRef = useRef(null);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -52,6 +52,25 @@ const EditPost = ({ postId }) => {
     fetchPost();
   }, [status, session, postId, router]);
 
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        console.log('Mutation observed:', mutation);
+      });
+    });
+
+    if (quillRef.current) {
+      observer.observe(quillRef.current, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
@@ -79,50 +98,59 @@ const EditPost = ({ postId }) => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <form onSubmit={handleEdit}>
-      <div>
-        <label>Título</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Conteúdo</label>
-        <ReactQuill
-          value={content}
-          onChange={setContent}
-          modules={{
-            toolbar: [
-              [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-              [{ size: [] }],
-              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' },
-              { 'indent': '-1' }, { 'indent': '+1' }],
-              ['link', 'image', 'video'],
-              ['clean']
-            ],
-          }}
-          formats={[
-            'header', 'font', 'size',
-            'bold', 'italic', 'underline', 'strike', 'blockquote',
-            'list', 'bullet', 'indent',
-            'link', 'image', 'video'
-          ]}
-        />
-      </div>
-      <div>
-        <label>Autor</label>
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </div>
-      <button type="submit">Editar Postagem</button>
-      <HelpBalloon message="Pode levar alguns minutos para as alterações terem efeito." />
-    </form>
+    <Container component="main" maxWidth="md">
+      <Box sx={{ mt: 4 }}>
+        <Typography component="h1" variant="h5">Editar Post</Typography>
+        <form onSubmit={handleEdit}>
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Título"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </Box>
+          <Box sx={{ mb: 2 }} ref={quillRef}>
+            <Typography component="label" variant="body1">Conteúdo</Typography>
+            <ReactQuill
+              value={content}
+              onChange={setContent}
+              modules={{
+                toolbar: [
+                  [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                  [{ size: [] }],
+                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  [{ 'list': 'ordered' }, { 'list': 'bullet' },
+                  { 'indent': '-1' }, { 'indent': '+1' }],
+                  ['link', 'image', 'video'],
+                  ['clean']
+                ],
+              }}
+              formats={[
+                'header', 'font', 'size',
+                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                'list', 'bullet', 'indent',
+                'link', 'image', 'video'
+              ]}
+            />
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Autor"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              required
+            />
+          </Box>
+          <Button type="submit" variant="contained" color="primary">Editar Postagem</Button>
+          <HelpBalloon message="Pode levar alguns minutos para as alterações terem efeito." />
+        </form>
+      </Box>
+    </Container>
   );
 };
 

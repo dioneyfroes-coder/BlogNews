@@ -1,13 +1,19 @@
-import styles from "./about.module.css";
+import React from 'react';
+import { Container, Typography, Box } from '@mui/material';
 
 const About = () => {
-    return (
-      <div className={styles.sobreContainer}>
-        <h1>Sobre</h1>
-        <p>Informações sobre o blog...</p>
-      </div>
-    );
-  };
-  
-  export default About;
-  
+  return (
+    <Container component="main" maxWidth="md">
+      <Box component="section" sx={{ my: 4 }}>
+        <Typography component="header" variant="h3" gutterBottom>
+          Sobre
+        </Typography>
+        <Typography component="p" variant="body1">
+          Informações sobre o blog...
+        </Typography>
+      </Box>
+    </Container>
+  );
+};
+
+export default About;

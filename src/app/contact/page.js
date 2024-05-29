@@ -3,14 +3,29 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Container, Typography, Box, TextField, Button, FormControl, FormHelperText } from '@mui/material';
 
 export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (name.length < 3) newErrors.name = 'O nome deve ter pelo menos 3 letras.';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) newErrors.email = 'Email inválido.';
+    if (message.length < 10) newErrors.message = 'A mensagem deve ter pelo menos 10 caracteres.';
+    if (message.length > 500) newErrors.message = 'A mensagem não pode exceder 500 caracteres.';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
 
     const res = await fetch('/api/send-email', {
       method: 'POST',
@@ -25,49 +40,73 @@ export default function Contact() {
       setName('');
       setEmail('');
       setMessage('');
+      setErrors({});
     } else {
       toast.error('Falha ao enviar a mensagem.');
     }
   };
 
   return (
-    <div>
-      <h1>Contacte-nos</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nome:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="message">Mensagem:</label>
-          <textarea
-            id="message"
-            name="message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          ></textarea>
-        </div>
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="sm">
+      <Box component="section" sx={{ mt: 4, mb: 4 }}>
+        <Typography component="header" variant="h3" gutterBottom>
+          Contacte-nos
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate autoComplete="off">
+          <FormControl fullWidth margin="normal" error={Boolean(errors.name)}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="name"
+              label="Nome"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && <FormHelperText>{errors.name}</FormHelperText>}
+          </FormControl>
+          <FormControl fullWidth margin="normal" error={Boolean(errors.email)}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {errors.email && <FormHelperText>{errors.email}</FormHelperText>}
+          </FormControl>
+          <FormControl fullWidth margin="normal" error={Boolean(errors.message)}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="message"
+              label="Mensagem"
+              name="message"
+              multiline
+              rows={1}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              inputProps={{ maxLength: 500 }}
+            />
+            {errors.message && <FormHelperText>{errors.message}</FormHelperText>}
+          </FormControl>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Enviar
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
-};
+}

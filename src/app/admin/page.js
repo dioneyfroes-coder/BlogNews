@@ -4,10 +4,17 @@ import { useSession, signIn } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import {
+  Container,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@mui/material';
 import CreatePost from '@/components/CreatePost';
 import EditPost from '@/components/EditPost';
 import DeletePost from '@/components/DeletePost';
 import PostSelector from '@/components/PostSelector';
+import ModerateComments from '@/components/ModerateComments';
 import styles from './Admin.module.css';
 
 const Admin = () => {
@@ -19,6 +26,7 @@ const Admin = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditMenu, setShowEditMenu] = useState(false);
   const [showDeleteMenu, setShowDeleteMenu] = useState(false);
+  const [showModerateComments, setShowModerateComments] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -51,18 +59,28 @@ const Admin = () => {
     setShowCreateForm(true);
     setShowEditMenu(false);
     setShowDeleteMenu(false);
+    setShowModerateComments(false);
   };
 
   const handleEditClick = () => {
     setShowEditMenu(true);
     setShowCreateForm(false);
     setShowDeleteMenu(false);
+    setShowModerateComments(false);
   };
 
   const handleDeleteClick = () => {
     setShowDeleteMenu(true);
     setShowCreateForm(false);
     setShowEditMenu(false);
+    setShowModerateComments(false);
+  };
+
+  const handleModerateCommentsClick = () => {
+    setShowModerateComments(true);
+    setShowCreateForm(false);
+    setShowEditMenu(false);
+    setShowDeleteMenu(false);
   };
 
   const handlePostSelect = (e) => {
@@ -70,29 +88,54 @@ const Admin = () => {
   };
 
   return (
-    <div className={styles.adminContainer}>
-      <h1 className={styles.adminHeader}>Página de Administração</h1>
+    <Container className={styles.adminContainer}>
+      <Typography variant="h1" className={styles.adminHeader}>
+        Página de Administração
+      </Typography>
       <div className={styles.buttonGroup}>
-        <button onClick={handleCreateClick}>Criar Post</button>
-        <button onClick={handleEditClick}>Editar Post</button>
-        <button onClick={handleDeleteClick}>Excluir Post</button>
+        <Button variant="contained" color="primary" onClick={handleCreateClick}>
+          Criar Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleEditClick}>
+          Editar Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleDeleteClick}>
+          Excluir Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleModerateCommentsClick}>
+          Moderação de Comentários
+        </Button>
       </div>
       {showCreateForm && <CreatePost />}
       {showEditMenu && (
-        <div>
-          <h2>Selecionar Post para Editar</h2>
+        <div className={styles.sectionContainer}>
+          <Typography variant="h2" className={styles.sectionHeader}>
+            Selecionar Post para Editar
+          </Typography>
           <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
           {selectedPostId && <EditPost postId={selectedPostId} />}
         </div>
       )}
       {showDeleteMenu && (
-        <div>
-          <h2>Selecionar Post para Excluir</h2>
+        <div className={styles.sectionContainer}>
+          <Typography variant="h2" className={styles.sectionHeader}>
+            Selecionar Post para Excluir
+          </Typography>
           <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
           {selectedPostId && <DeletePost postId={selectedPostId} />}
         </div>
       )}
-    </div>
+      {showModerateComments && (
+        <div className={styles.sectionContainer}>
+          <Typography variant="h2" className={styles.sectionHeader}>
+            Selecionar Post para Moderar Comentários
+          </Typography>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <ModerateComments postId={selectedPostId} />}
+        </div>
+      )}
+      {loading && <CircularProgress />}
+    </Container>
   );
 };
 
