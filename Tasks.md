@@ -7,8 +7,9 @@ Feito*criar posts
 Feito*editar posts
 Feito*excluir posts
 Feito*login
--função e seu botão de "procurar/seach"
--função de dark mode
+Feito-função e seu botão de "procurar/seach"
+Feito*Corrigir duas lupas e sobreposição da header e do footer
+Feito-função de dark mode
 -componente newsletter
 -atualizar o modo de exibir os posts, mudar para cards com imagem e resumo ou só resumo
 -visualização do post completa em pagina "exclusiva"

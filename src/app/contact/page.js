@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Container, Typography, Box, TextField, Button, FormControl, FormHelperText } from '@mui/material';
+import NavigationBar from '@/components/NavigationBar';
 
 export default function Contact() {
   const [name, setName] = useState('');
@@ -48,6 +49,7 @@ export default function Contact() {
 
   return (
     <Container component="main" maxWidth="sm">
+      <NavigationBar />
       <Box component="section" sx={{ mt: 4, mb: 4 }}>
         <Typography component="header" variant="h3" gutterBottom>
           Contacte-nos

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Container, Box, Typography, TextField, Button } from '@mui/material';
+import NavigationBar from '@/components/NavigationBar';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -29,6 +30,7 @@ const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <NavigationBar />
       <Box
         sx={{
           marginTop: 8,

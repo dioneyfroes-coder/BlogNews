@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, List, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
 import { toast } from 'react-toastify';
-import styles from './ModerateComments.module.css';
+import styles from '../styles/ModerateComments.module.css';
 
 const ModerateComments = ({ postId }) => {
   const [comments, setComments] = useState([]);

@@ -1,6 +1,6 @@
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
-import Home from '@/components/Home';
+import Home from './Home/page';
 
 export const dynamic = 'force-dynamic'; // Para garantir renderização dinâmica
 

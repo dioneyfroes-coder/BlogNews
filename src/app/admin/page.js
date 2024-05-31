@@ -15,7 +15,8 @@ import EditPost from '@/components/EditPost';
 import DeletePost from '@/components/DeletePost';
 import PostSelector from '@/components/PostSelector';
 import ModerateComments from '@/components/ModerateComments';
-import styles from './Admin.module.css';
+import styles from '../../styles/admin.module.css';
+import NavigationBar from '@/components/NavigationBar';
 
 const Admin = () => {
   const { data: session, status } = useSession();
@@ -89,6 +90,7 @@ const Admin = () => {
 
   return (
     <Container className={styles.adminContainer}>
+      <NavigationBar />
       <Typography variant="h1" className={styles.adminHeader}>
         Página de Administração
       </Typography>

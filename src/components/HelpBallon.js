@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Fab, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import './HelpBallon';
+import '../styles/HelpBallon.css';
 
 const HelpBalloon = ({ message }) => {
   const [open, setOpen] = useState(false);

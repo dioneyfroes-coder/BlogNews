@@ -12,7 +12,10 @@ const PostSchema = new mongoose.Schema({
       content: String,
       date: { type: Date, default: Date.now }
     }
-  ]
-});
+  ],
+}, { timestamps: true });
+
+// Adiciona um índice de texto para os campos `title` e `content`
+PostSchema.index({ title: 'text', content: 'text' });
 
 export default mongoose.models.Post || mongoose.model('Post', PostSchema);
