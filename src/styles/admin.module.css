@@ -1,3 +1,4 @@
+/* admin.module.css */
 .adminContainer {
   display: flex;
   flex-direction: column;
@@ -56,4 +57,29 @@
 .commentActions {
   display: flex;
   gap: 0.5rem;
+}
+
+/* Styles specific to StatusPanel */
+.statusPanel {
+  position: fixed;
+  right: 2rem;
+  top: 5rem;
+  width: 250px;
+  background-color: var(--bg-color); /* Use CSS variables to adapt to dark mode */
+  color: var(--text-color); /* Use CSS variables to adapt to dark mode */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.statusPanelHeader {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.statusPanelContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

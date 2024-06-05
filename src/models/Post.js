@@ -1,3 +1,5 @@
+// src/models/Post.js
+
 import mongoose from 'mongoose';
 
 const PostSchema = new mongoose.Schema({
@@ -13,9 +15,12 @@ const PostSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now }
     }
   ],
+  category: { type: String, required: true }, // Campo de categoria
 }, { timestamps: true });
 
-// Adiciona um índice de texto para os campos `title` e `content`
-PostSchema.index({ title: 'text', content: 'text' });
+// Adiciona um índice de texto para os campos `title`, `content` e `category`
+PostSchema.index({ title: 'text', content: 'text', category: 'text' });
 
-export default mongoose.models.Post || mongoose.model('Post', PostSchema);
+const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
+
+export default Post;

@@ -1,6 +1,8 @@
+// src/pages/index.js
+
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
-import Home from './Home/page';
+import Home from '@/app/Home/page';
 
 export const dynamic = 'force-dynamic'; // Para garantir renderização dinâmica
 
@@ -20,4 +22,4 @@ export default async function Page() {
   });
 
   return <Home initialPosts={posts} />;
-}
+};

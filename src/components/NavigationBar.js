@@ -1,41 +1,96 @@
+// src/components/NavigationBar.js
 "use client";
 
 import React, { useState } from 'react';
-import { Box, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material'; // Removido SearchIcon
-import SearchBar from './SearchBar';
+import { Drawer, List, ListItem, IconButton, Divider, Box, Typography, TextField } from '@mui/material';
+import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+// Carregar os componentes dinamicamente para evitar problemas de hidratação
+const NewsLetter = dynamic(() => import('@/components/NewsLetter'), { ssr: false });
+const CategoryFilter = dynamic(() => import('@/components/CategoryFilter'), { ssr: false });
+const HistoryNavigation = dynamic(() => import('@/components/HistoryNavigation'), { ssr: false });
 
 const NavigationBar = () => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchCategory, setSearchCategory] = useState('');
+  const router = useRouter();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const query = {};
+    if (searchQuery.trim()) {
+      query.q = searchQuery;
+    }
+    if (searchCategory) {
+      query.category = searchCategory;
+    }
+    const queryString = new URLSearchParams(query).toString();
+    router.push(`/search?${queryString}`);
+    toggleDrawer();
+  };
+
   return (
-    <Box>
-      <IconButton onClick={toggleDrawer} sx={{ position: 'fixed', top: '64px', left: 0, zIndex: 1300 }}>
+    <>
+      <IconButton onClick={toggleDrawer} sx={{ position: 'fixed', left: 0, top: 64 }}>
         <MenuIcon />
       </IconButton>
-      <Drawer
-        variant="persistent"
-        anchor="left"
-        open={open}
-        PaperProps={{ sx: { width: 250, top: '64px', height: 'calc(100% - 64px)', zIndex: 1200 } }}
-      >
-        <List>
-          <ListItem sx={{ padding: '16px 8px' }}>
-            <SearchBar />
-          </ListItem>
-          <ListItem button>
-            <ListItemText primary="Categorias" />
-          </ListItem>
-          <ListItem button>
-            <ListItemText primary="Histórico" />
-          </ListItem>
-        </List>
+      <Drawer open={open} onClose={toggleDrawer} anchor="left">
+        <Box sx={{ width: 300, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <Box>
+            <List>
+              <ListItem>
+                <Typography variant="h6">Search</Typography>
+              </ListItem>
+              <ListItem>
+                <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Search…"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton type="submit">
+                          <SearchIcon />
+                        </IconButton>
+                      ),
+                    }}
+                  />
+                </form>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="h6">Categorias</Typography>
+              </ListItem>
+              <ListItem>
+                <CategoryFilter searchCategory={searchCategory} setSearchCategory={setSearchCategory} />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="h6">Histórico</Typography>
+              </ListItem>
+              <ListItem>
+                <HistoryNavigation />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="h6">NewsLetter</Typography>
+              </ListItem>
+              <ListItem>
+                <NewsLetter />
+              </ListItem>
+            </List>
+          </Box>
+        </Box>
       </Drawer>
-    </Box>
+    </>
   );
 };
 

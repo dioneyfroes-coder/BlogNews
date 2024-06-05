@@ -1,7 +1,10 @@
+// src/pages/api/posts.js
+
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
 import { getToken } from 'next-auth/jwt';
 import sanitizeHtml from 'sanitize-html';
+import { handleNewPost } from '@/utils/handleNewPost';
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -15,12 +18,12 @@ export default async function handler(req, res) {
   // Função para sanitizar dados, permitindo vídeos do YouTube
   const sanitizeInput = (input) => {
     return sanitizeHtml(input, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'iframe', 'div', 'pre', 'ul', 'ol', 'li', 'a', 'b', 'i', 'u', 's', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'div', 'pre', 'ul', 'ol', 'li', 'a', 'b', 'i', 'u', 's', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
       allowedAttributes: {
         ...sanitizeHtml.defaults.allowedAttributes,
-        img: [ 'src', 'alt' ],
-        a: [ 'href' ],
-        iframe: [ 'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen' ]
+        img: ['src', 'alt'],
+        a: ['href'],
+        iframe: ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen']
       },
       allowedIframeHostnames: ['www.youtube.com', 'youtube.com', 'www.youtu.be', 'youtu.be']
     });
@@ -38,13 +41,18 @@ export default async function handler(req, res) {
 
     case 'POST':
       try {
-        const { title, content, author } = req.body;
+        const { title, content, author, category } = req.body;
+        if (!category) {
+          return res.status(400).json({ success: false, error: 'A categoria é obrigatória' });
+        }
         const sanitizedTitle = sanitizeInput(title);
         const sanitizedContent = sanitizeInput(content);
         const sanitizedAuthor = sanitizeInput(author);
+        const sanitizedCategory = sanitizeInput(category);
 
-        const post = new Post({ title: sanitizedTitle, content: sanitizedContent, author: sanitizedAuthor });
+        const post = new Post({ title: sanitizedTitle, content: sanitizedContent, author: sanitizedAuthor, category: sanitizedCategory });
         await post.save();
+        await handleNewPost(post); // Envia emails aos assinantes após salvar o post
         res.status(201).json({ success: true, data: post });
       } catch (error) {
         res.status(400).json({ success: false, error: error.message });
@@ -53,7 +61,10 @@ export default async function handler(req, res) {
 
     case 'PUT':
       try {
-        const { id, title, content, author } = req.body;
+        const { id, title, content, author, category } = req.body;
+        if (!category) {
+          return res.status(400).json({ success: false, error: 'A categoria é obrigatória' });
+        }
         const post = await Post.findById(id);
         if (!post) {
           return res.status(404).json({ success: false, error: 'Post não encontrado' });
@@ -61,6 +72,7 @@ export default async function handler(req, res) {
         post.title = sanitizeInput(title);
         post.content = sanitizeInput(content);
         post.author = sanitizeInput(author);
+        post.category = sanitizeInput(category);
         await post.save();
         res.status(200).json({ success: true, data: post });
       } catch (error) {
@@ -90,4 +102,4 @@ export default async function handler(req, res) {
       res.status(405).json({ success: false, error: 'Método não permitido' });
       break;
   }
-};
+}

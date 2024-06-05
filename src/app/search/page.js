@@ -1,87 +1,75 @@
+// src/app/search/page.js
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Box, Typography, CircularProgress, List, ListItem, Card, CardContent } from '@mui/material';
-import sanitizeHtml from 'sanitize-html';
+import { Container, Grid, Typography, Box } from '@mui/material';
+import PostCard from '@/components/PostCard';
 import NavigationBar from '@/components/NavigationBar';
 
 const Search = () => {
   const searchParams = useSearchParams();
-  const query = searchParams.get('q');
-
-  const [results, setResults] = useState([]);
+  const category = searchParams.get('category');
+  const q = searchParams.get('q');
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!query) return;
-
-    const fetchResults = async () => {
+    const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/search?q=${query}`);
-        if (res.ok) {
+        let res;
+        if (q) {
+          res = await fetch(`/api/search?q=${q}`);
+        } else if (category) {
+          res = await fetch(`/api/categoryFilter?category=${category}`);
+        }
+        
+        if (res) {
           const data = await res.json();
-          setResults(data.results);
+          if (data.success) {
+            setPosts(data.data);
+          } else {
+            setPosts([]);
+          }
         } else {
-          console.error(`Error fetching search results: ${res.statusText}`);
+          setPosts([]);
         }
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        console.error('Error fetching posts:', error);
+        setPosts([]);
       }
       setLoading(false);
     };
 
-    fetchResults();
-  }, [query]);
+    fetchPosts();
+  }, [category, q]);
 
   return (
-    <Box sx={{ padding: 2,  display: 'flex' }}>
+    <Container component="main" maxWidth="lg">
       <NavigationBar />
-      <Typography variant="h4" gutterBottom>
-        Resultados por "{query}"
-      </Typography>
-      {loading ? (
-        <CircularProgress />
-      ) : results.length > 0 ? (
-        <List>
-          {results.map((result) => (
-            <ListItem key={result._id} sx={{ marginBottom: 2 }}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h2">
-                    {result.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeHtml(result.content, {
-                        allowedTags: sanitizeHtml.defaults.allowedTags.concat([
-                          'img', 'iframe', 'div', 'pre', 'ul', 'ol', 'li', 'a', 'b', 'i', 'u', 's', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-                        ]),
-                        allowedAttributes: {
-                          ...sanitizeHtml.defaults.allowedAttributes,
-                          img: ['src', 'alt'],
-                          a: ['href'],
-                          iframe: ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen']
-                        },
-                        allowedIframeHostnames: ['www.youtube.com', 'youtube.com', 'www.youtu.be', 'youtu.be']
-                      })
-                    }}
-                  />
-                  <Typography variant="caption" display="block" gutterBottom>
-                    By {result.author}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <Typography>No results found.</Typography>
-      )}
-    </Box>
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          {category ? `Posts na categoria: ${category}` : `Resultados da pesquisa: ${q}`}
+        </Typography>
+        {loading ? (
+          <Typography>Carregando...</Typography>
+        ) : (
+          <Grid container spacing={4}>
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <Grid item key={post._id} xs={12} sm={6} md={4}>
+                  <PostCard post={post} />
+                </Grid>
+              ))
+            ) : (
+              <Typography>Sem resultados encontrados.</Typography>
+            )}
+          </Grid>
+        )}
+      </Box>
+    </Container>
   );
 };
 

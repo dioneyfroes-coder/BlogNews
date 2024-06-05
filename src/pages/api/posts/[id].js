@@ -1,16 +1,9 @@
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
-import { getToken } from 'next-auth/jwt';
 
 export default async function handler(req, res) {
   await dbConnect();
-
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-  if (!token || !['admin', 'editor', 'redator'].includes(token.role)) {
-    return res.status(401).json({ success: false, error: 'Não autorizado' });
-  }
-
+  
   const { id } = req.query;
 
   if (req.method === 'GET') {

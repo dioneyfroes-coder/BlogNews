@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Typography, TextField, Button, Container } from '@mui/material';
+import { Box, Typography, TextField, Button, Container, MenuItem } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import 'react-quill/dist/quill.snow.css';
 import HelpBalloon from './HelpBallon';
+import { categories, addCategory } from '@/constants/categories';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -17,6 +18,7 @@ const EditPost = ({ postId }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
+  const [categoria, setCategoria] = useState('Sem Categoria'); // Categoria padrão
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ const EditPost = ({ postId }) => {
           setTitle(data.data.title);
           setContent(data.data.content);
           setAuthor(data.data.author);
+          setCategoria(data.data.category || 'Sem Categoria'); // Carrega a categoria do post ou a padrão
         } else {
           toast.error('Failed to load post');
           router.push('/admin');
@@ -79,19 +82,25 @@ const EditPost = ({ postId }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: post._id, title, content, author }),
+        body: JSON.stringify({
+          id: postId,
+          title,
+          content,
+          author,
+          category: categoria,
+        }),
       });
 
-      if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
         toast.success('Postagem editada com sucesso!');
         router.push('/admin');
       } else {
-        const errorData = await res.json();
-        toast.error(`Erro ao editar a postagem: ${errorData.error}`);
+        toast.error(`Erro ao editar a postagem: ${data.error}`);
       }
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao editar a postagem.');
+      toast.error('Erro ao editar a postagem');
     }
   };
 
@@ -99,56 +108,92 @@ const EditPost = ({ postId }) => {
 
   return (
     <Container component="main" maxWidth="md">
-      <Box sx={{ mt: 4 }}>
-        <Typography component="h1" variant="h5">Editar Post</Typography>
-        <form onSubmit={handleEdit}>
-          <Box sx={{ mb: 2 }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-          </Box>
-          <Box sx={{ mb: 2 }} ref={quillRef}>
-            <Typography component="label" variant="body1">Conteúdo</Typography>
-            <ReactQuill
-              value={content}
-              onChange={setContent}
-              modules={{
-                toolbar: [
-                  [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                  [{ size: [] }],
-                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                  [{ 'list': 'ordered' }, { 'list': 'bullet' },
-                  { 'indent': '-1' }, { 'indent': '+1' }],
-                  ['link', 'image', 'video'],
-                  ['clean']
-                ],
-              }}
-              formats={[
-                'header', 'font', 'size',
-                'bold', 'italic', 'underline', 'strike', 'blockquote',
-                'list', 'bullet', 'indent',
-                'link', 'image', 'video'
-              ]}
-            />
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Autor"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              required
-            />
-          </Box>
-          <Button type="submit" variant="contained" color="primary">Editar Postagem</Button>
-          <HelpBalloon message="Pode levar alguns minutos para as alterações terem efeito." />
-        </form>
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Editar Post
+        </Typography>
+        <Box component="form" onSubmit={handleEdit} sx={{ mt: 3 }}>
+          <TextField
+            name="title"
+            required
+            fullWidth
+            id="title"
+            label="Título"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <Typography variant="h6" component="label" htmlFor="content">
+            Conteúdo
+          </Typography>
+          <ReactQuill
+            value={content}
+            onChange={(value) => setContent(value)}
+            modules={{
+              toolbar: [
+                [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                [{size: []}],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, 
+                 {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image', 'video'],
+                ['clean']
+              ],
+            }}
+            formats={[
+              'header', 'font', 'size',
+              'bold', 'italic', 'underline', 'strike', 'blockquote',
+              'list', 'bullet', 'indent',
+              'link', 'image', 'video'
+            ]}
+            placeholder="Escreva o conteúdo aqui..."
+            ref={quillRef}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="author"
+            label="Autor"
+            name="author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            select
+            required
+            fullWidth
+            id="categoria"
+            label="Categoria"
+            name="categoria"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            sx={{ mb: 2 }}
+          >
+            {categories.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Editar Postagem
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

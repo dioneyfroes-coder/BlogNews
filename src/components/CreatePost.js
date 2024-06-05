@@ -12,8 +12,10 @@ import {
   Typography,
   TextField,
   Button,
-  Grid
+  Grid,
+  MenuItem
 } from '@mui/material';
+import { categories, addCategory } from '@/constants/categories';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -21,6 +23,7 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
+  const [categoria, setCategoria] = useState('Sem Categoria'); // Categoria padrão
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -38,13 +41,13 @@ const CreatePost = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Adiciona o token de autenticação ao cabeçalho
           'Authorization': `Bearer ${session.user.id}`,
         },
-        body: JSON.stringify({ title, content, author }),
+        body: JSON.stringify({ title, content, author, categoria }),
       });
 
       if (res.ok) {
+        addCategory(categoria); // Adiciona a nova categoria à lista global
         toast.success('Postagem criada com sucesso!');
         router.push('/admin');
       } else {
@@ -120,6 +123,24 @@ const CreatePost = () => {
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                select
+                required
+                fullWidth
+                id="categoria"
+                label="Categoria"
+                name="categoria"
+                value={categoria}
+                onChange={(e) => setCategoria(e.target.value)}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
           </Grid>
           <Button

@@ -1,25 +1,26 @@
-// pages/api/posts/[id]/like.js
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
 
 export default async function handler(req, res) {
-  await dbConnect();
-
   const { id } = req.query;
 
-  if (req.method === 'POST') {
+  await dbConnect();
+
+  if (req.method === 'PUT') {
     try {
       const post = await Post.findById(id);
       if (!post) {
-        return res.status(404).json({ error: 'Post not found' });
+        return res.status(404).json({ success: false, message: 'Post not found' });
       }
+
       post.likes += 1;
       await post.save();
-      res.status(200).json(post);
+
+      return res.status(200).json({ success: true, likes: post.likes });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 }

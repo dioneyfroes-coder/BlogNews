@@ -10,6 +10,10 @@ O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele
 - Excluir postagens de blog.
 - Autenticação de usuário com NextAuth.js.
 - Funcionalidades de administração para usuários autorizados.
+- Like e comentar nas postagens.
+- Filtro de postagens por categorias.
+- Navegação de histórico de postagens por datas.
+- Newsletter funcional.
 
 ## Instruções de Instalação
 1. Clone o repositório para sua máquina local.
@@ -23,6 +27,11 @@ O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele
 - `pages/`: Contém as rotas da API.
 - `lib/`: Contém funções e utilitários.
 - `models/`: Contém os modelos de dados MongoDB.
+- `utils/`: Contém funções utilitárias reutilizáveis.
+- `styles/`: Contém os arquivos de estilo global da aplicação.
+- `middleware/`: Contém os middlewares da aplicação.
+- `constants/`: Contém constantes usadas na aplicação.
+- `contexts/`: Contém os contextos de estado global da aplicação.
 
 ## Tecnologias Utilizadas
 - Next.js
@@ -41,6 +50,16 @@ Isso significa que você tem permissão para usar, copiar, distribuir e modifica
 Para qualquer uso comercial do projeto, entre em contato com o autor para obter permissão.
 
 ## Histórico de Versões
+
+### Versão 1.5 (5 de Junho de 2024)
+#### Alterações
+- Nova página inicial com exibição de cards de miniaturas dos posts.
+- Página de resultados de busca reformulada para exibir cards de miniaturas dos posts.
+- Adição de filtro de postagens por categorias.
+- Implementação de navegação de histórico de postagens por datas.
+- Correção de bugs que impediam a atualização de likes e comentários dos posts.
+- Reestruturação do projeto para separar responsabilidades do frontend e backend.
+- Newsletter totalmente funcional.
 
 ### Versão 1.4 (30 de Maio de 2024)
 #### Alterações

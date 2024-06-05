@@ -9,14 +9,17 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Grid,
+  Paper,
 } from '@mui/material';
 import CreatePost from '@/components/CreatePost';
 import EditPost from '@/components/EditPost';
 import DeletePost from '@/components/DeletePost';
 import PostSelector from '@/components/PostSelector';
 import ModerateComments from '@/components/ModerateComments';
-import styles from '../../styles/admin.module.css';
 import NavigationBar from '@/components/NavigationBar';
+import StatusPanel from '@/components/StatusPanel'; // Import the new StatusPanel component
+import styles from '@/styles/admin.module.css';
 
 const Admin = () => {
   const { data: session, status } = useSession();
@@ -94,49 +97,56 @@ const Admin = () => {
       <Typography variant="h1" className={styles.adminHeader}>
         Página de Administração
       </Typography>
-      <div className={styles.buttonGroup}>
-        <Button variant="contained" color="primary" onClick={handleCreateClick}>
-          Criar Post
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleEditClick}>
-          Editar Post
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleDeleteClick}>
-          Excluir Post
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleModerateCommentsClick}>
-          Moderação de Comentários
-        </Button>
-      </div>
-      {showCreateForm && <CreatePost />}
-      {showEditMenu && (
-        <div className={styles.sectionContainer}>
-          <Typography variant="h2" className={styles.sectionHeader}>
-            Selecionar Post para Editar
-          </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <EditPost postId={selectedPostId} />}
-        </div>
-      )}
-      {showDeleteMenu && (
-        <div className={styles.sectionContainer}>
-          <Typography variant="h2" className={styles.sectionHeader}>
-            Selecionar Post para Excluir
-          </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <DeletePost postId={selectedPostId} />}
-        </div>
-      )}
-      {showModerateComments && (
-        <div className={styles.sectionContainer}>
-          <Typography variant="h2" className={styles.sectionHeader}>
-            Selecionar Post para Moderar Comentários
-          </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <ModerateComments postId={selectedPostId} />}
-        </div>
-      )}
-      {loading && <CircularProgress />}
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
+          <div className={styles.buttonGroup}>
+            <Button variant="contained" color="primary" onClick={handleCreateClick}>
+              Criar Post
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleEditClick}>
+              Editar Post
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleDeleteClick}>
+              Excluir Post
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleModerateCommentsClick}>
+              Moderação de Comentários
+            </Button>
+          </div>
+          {showCreateForm && <CreatePost />}
+          {showEditMenu && (
+            <div className={styles.sectionContainer}>
+              <Typography variant="h2" className={styles.sectionHeader}>
+                Selecionar Post para Editar
+              </Typography>
+              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+              {selectedPostId && <EditPost postId={selectedPostId} />}
+            </div>
+          )}
+          {showDeleteMenu && (
+            <div className={styles.sectionContainer}>
+              <Typography variant="h2" className={styles.sectionHeader}>
+                Selecionar Post para Excluir
+              </Typography>
+              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+              {selectedPostId && <DeletePost postId={selectedPostId} />}
+            </div>
+          )}
+          {showModerateComments && (
+            <div className={styles.sectionContainer}>
+              <Typography variant="h2" className={styles.sectionHeader}>
+                Selecionar Post para Moderar Comentários
+              </Typography>
+              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+              {selectedPostId && <ModerateComments postId={selectedPostId} />}
+            </div>
+          )}
+          {loading && <CircularProgress />}
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <StatusPanel />
+        </Grid>
+      </Grid>
     </Container>
   );
 };
