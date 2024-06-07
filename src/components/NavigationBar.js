@@ -46,13 +46,13 @@ const NavigationBar = () => {
           <Box>
             <List>
               <ListItem>
-                <Typography variant="h6">Search</Typography>
+                <Typography variant="h6">Pesquisar no Blog</Typography>
               </ListItem>
               <ListItem>
                 <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <TextField
                     fullWidth
-                    placeholder="Search…"
+                    placeholder="Pesquisar"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     InputProps={{
@@ -67,7 +67,7 @@ const NavigationBar = () => {
               </ListItem>
               <Divider />
               <ListItem>
-                <Typography variant="h6">Categorias</Typography>
+                <Typography variant="h6">Filtrar Posts</Typography>
               </ListItem>
               <ListItem>
                 <CategoryFilter searchCategory={searchCategory} setSearchCategory={setSearchCategory} />
@@ -81,7 +81,7 @@ const NavigationBar = () => {
               </ListItem>
               <Divider />
               <ListItem>
-                <Typography variant="h6">NewsLetter</Typography>
+                <Typography variant="h6"></Typography>
               </ListItem>
               <ListItem>
                 <NewsLetter />

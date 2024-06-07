@@ -117,3 +117,33 @@ img, iframe {
   display: block;
   margin: 0 auto;
 }
+
+.ql-toolbar {
+  background-color: #f3f3f3; /* fundo claro para a barra de ferramentas */
+}
+
+.ql-toolbar .ql-picker {
+  color: #000; /* texto preto para os seletores */
+}
+
+.ql-toolbar button {
+  color: #000; /* texto preto para os botões */
+}
+
+.ql-toolbar button.ql-active {
+  color: #007bff; /* texto azul para os botões ativos */
+}
+
+/* Estilo específico para o botão de URL */
+.ql-toolbar button.ql-insertImageURL {
+  color: #000;
+}
+
+.ql-toolbar button.ql-insertImageURL.ql-active {
+  color: #007bff;
+}
+
+/* Ajuste a altura da área de edição */
+.ql-container {
+  min-height: 300px;
+}

@@ -16,6 +16,7 @@ const PostSchema = new mongoose.Schema({
     }
   ],
   category: { type: String, required: true }, // Campo de categoria
+  imageUrl: { type: String, default: '' }, // Campo opcional para a URL da imagem
 }, { timestamps: true });
 
 // Adiciona um índice de texto para os campos `title`, `content` e `category`

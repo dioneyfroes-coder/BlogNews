@@ -5,6 +5,7 @@ import Post from '@/models/Post';
 import { getToken } from 'next-auth/jwt';
 import sanitizeHtml from 'sanitize-html';
 import { handleNewPost } from '@/utils/handleNewPost';
+import addToQueue from '@/lib/emailQueue'; // Importar a função de adicionar à fila
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -35,13 +36,13 @@ export default async function handler(req, res) {
         const posts = await Post.find({});
         res.status(200).json({ success: true, data: posts });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ success: false, error: `Erro ao buscar posts: ${error.message}` });
       }
       break;
 
     case 'POST':
       try {
-        const { title, content, author, category } = req.body;
+        const { title, content, author, category, imageUrl } = req.body;
         if (!category) {
           return res.status(400).json({ success: false, error: 'A categoria é obrigatória' });
         }
@@ -50,18 +51,31 @@ export default async function handler(req, res) {
         const sanitizedAuthor = sanitizeInput(author);
         const sanitizedCategory = sanitizeInput(category);
 
-        const post = new Post({ title: sanitizedTitle, content: sanitizedContent, author: sanitizedAuthor, category: sanitizedCategory });
+        const post = new Post({ title: sanitizedTitle, content: sanitizedContent, author: sanitizedAuthor, category: sanitizedCategory, imageUrl });
         await post.save();
         await handleNewPost(post); // Envia emails aos assinantes após salvar o post
+
+        // Adicionar e-mails à fila
+        const subscribers = await getSubscribers(); // Função que retorna os e-mails dos assinantes
+        for (const subscriber of subscribers) {
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: subscriber.email,
+            subject: `Novo post: ${sanitizedTitle}`,
+            text: `Olá, temos um novo post: ${sanitizedTitle}\n\n${sanitizedContent}\n\nVisite nosso blog para mais informações.`,
+          };
+          addToQueue(mailOptions); // Adicionar à fila de emails
+        }
+
         res.status(201).json({ success: true, data: post });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ success: false, error: `Erro ao criar o post: ${error.message}` });
       }
       break;
 
     case 'PUT':
       try {
-        const { id, title, content, author, category } = req.body;
+        const { id, title, content, author, category, imageUrl } = req.body;
         if (!category) {
           return res.status(400).json({ success: false, error: 'A categoria é obrigatória' });
         }
@@ -73,16 +87,17 @@ export default async function handler(req, res) {
         post.content = sanitizeInput(content);
         post.author = sanitizeInput(author);
         post.category = sanitizeInput(category);
+        post.imageUrl = imageUrl;
         await post.save();
         res.status(200).json({ success: true, data: post });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ success: false, error: `Erro ao editar o post: ${error.message}` });
       }
       break;
 
     case 'DELETE':
       try {
-        const { id } = req.query;  // Mudar para `req.query` ao invés de `req.body`
+        const { id } = req.query; // Mudar para `req.query` ao invés de `req.body`
         if (!id) {
           return res.status(400).json({ success: false, error: 'ID do post é necessário' });
         }
@@ -91,10 +106,10 @@ export default async function handler(req, res) {
         if (!post) {
           return res.status(404).json({ success: false, error: 'Post não encontrado' });
         }
-        await post.deleteOne();  // Usar deleteOne em vez de remove
+        await post.deleteOne(); // Usar deleteOne em vez de remove
         res.status(200).json({ success: true, data: {} });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ success: false, error: `Erro ao deletar o post: ${error.message}` });
       }
       break;
 

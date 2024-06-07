@@ -1,7 +1,10 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography, Box, IconButton, Badge } from '@mui/material';
+// src/components/PostCard.js
+
+import { Card, CardActionArea, CardContent, Typography, Box, IconButton, Badge } from '@mui/material';
 import { ThumbUp, Comment } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
+import ImageThumbnail from './ImageThumbnail';
 
 const PostCard = ({ post }) => {
   const router = useRouter();
@@ -13,12 +16,7 @@ const PostCard = ({ post }) => {
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <CardActionArea onClick={handleClick} sx={{ flexGrow: 1 }}>
-        <CardMedia
-          component="img"
-          height="140"
-          image={post.image || '/default-image.jpg'}
-          alt={post.title}
-        />
+        <ImageThumbnail imageUrl={post.imageUrl} altText={post.title} />
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h5" component="div">
             {post.title}

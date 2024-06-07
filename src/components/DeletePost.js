@@ -33,13 +33,13 @@ const DeletePost = ({ postId }) => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to delete post');
+        throw new Error(errorData.error || 'Falha ao deletar post');
       }
 
-      toast.success('Post deleted successfully');
+      toast.success('Post deletado com sucesso');
       router.push('/admin');
     } catch (error) {
-      console.error('Error deleting post:', error);
+      console.error('Erro ao deletar post:', error);
       toast.error(`Error: ${error.message}`);
     } finally {
       setLoading(false);

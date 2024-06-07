@@ -15,14 +15,14 @@ const ModerateComments = ({ postId }) => {
     try {
       const res = await fetch(`/api/posts/${postId}/comment`);
       if (!res.ok) {
-        throw new Error('Failed to fetch comments');
+        throw new Error('Erro ao encontrar comentários');
       }
       const data = await res.json();
       setComments(data.comments);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      toast.error('Failed to load comments');
+      console.error('Erro ao encontrar comentários:', error);
+      toast.error('Falha ao carregar comentários');
       setLoading(false);
     }
   };
@@ -35,7 +35,7 @@ const ModerateComments = ({ postId }) => {
         body: JSON.stringify({ commentId }),
       });
       if (!res.ok) {
-        throw new Error('Failed to delete comment');
+        throw new Error('Falha ao apagar comentário');
       }
       const updatedComments = comments.map(comment =>
         comment._id === commentId ? { ...comment, content: 'Comentário apagado' } : comment
@@ -43,8 +43,8 @@ const ModerateComments = ({ postId }) => {
       setComments(updatedComments);
       toast.success('Comentário apagado com sucesso');
     } catch (error) {
-      console.error('Error deleting comment:', error);
-      toast.error('Failed to delete comment');
+      console.error('Erro ao deletar comentário:', error);
+      toast.error('Falha ao apagar comentário');
     }
   };
 
@@ -52,7 +52,7 @@ const ModerateComments = ({ postId }) => {
     <div>
       <Typography variant="h6">Comentários</Typography>
       {loading ? (
-        <Typography>Loading...</Typography>
+        <Typography>Carregando...</Typography>
       ) : (
         <List className={styles.commentList}>
           {comments.map(comment => (

@@ -18,11 +18,12 @@ Feito-pagina search com resultados com visualização de cards
 Feito-navegação de posts por categoria
 Feito-menu lateral/aside da pagina home de histórico de posts por data
 
--refazer funções da pagina admin
+Feito-refazer funções da pagina admin
 Feito-corrigir bug de likes e commments
--testar e corrigir se necessário os alertas de email da newsletter.
--corrigir bug de uso de imagens, não é exibido a imagem postada ou editada.
--corrigir bug que tenta enviar email para curtidas, comentários e posts editados.
+Feito-testar e corrigir se necessário os alertas de email da newsletter.
+Feito-corrigir bug de uso de imagens, não é exibido a imagem postada ou editada.
+Feito-corrigir bug que tenta enviar email para posts editados.
+Feito-fazer algo sobre as miniaturas dos cardposts
 
 -aplicar css para melhorar visualização em telas de:
 * tablet
@@ -36,5 +37,9 @@ Feito-corrigir bug de likes e commments
 *refatoração
 *confiabilidade
 *melhorar a estrutura de pastas e arquivos
-*aplicar typescrypt
+*aplicar typescrypt?
 *melhorar desempenho da aplicação
+
+-criar documentação da aplicação toda.
+
+**finalizar, refazer o conteudo fixo, mudar para um conteudo pessoal e que possa demonstrar minhas habilidades pessoais na programação, enquanto publico o site deixando-o publico e fazendo parte do meu portifólio como programador.

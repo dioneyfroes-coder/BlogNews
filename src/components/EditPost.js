@@ -1,83 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import { Box, Typography, TextField, Button, Container, MenuItem } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
-import { useSession } from 'next-auth/react';
-import 'react-quill/dist/quill.snow.css';
-import HelpBalloon from './HelpBallon';
-import { categories, addCategory } from '@/constants/categories';
+// src/pages/EditPost.js
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Editor from '@/components/Editor';
 
 const EditPost = ({ postId }) => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
-  const [categoria, setCategoria] = useState('Sem Categoria'); // Categoria padrão
-  const quillRef = useRef(null);
+  const [category, setCategory] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    if (status === 'loading') return;
-    if (status === 'unauthenticated' || !['admin', 'editor', 'redator'].includes(session.user.role)) {
-      toast.error('Access denied');
-      router.push('/');
-      return;
-    }
-
     const fetchPost = async () => {
       try {
-        const res = await fetch(`/api/posts/${postId}`);
-        const data = await res.json();
-        if (data.success) {
-          setPost(data.data);
-          setTitle(data.data.title);
-          setContent(data.data.content);
-          setAuthor(data.data.author);
-          setCategoria(data.data.category || 'Sem Categoria'); // Carrega a categoria do post ou a padrão
-        } else {
-          toast.error('Failed to load post');
-          router.push('/admin');
-        }
-        setLoading(false);
+        const response = await fetch(`/api/posts/${postId}`);
+        const data = await response.json();
+        setPost(data.data);
+        setTitle(data.data.title);
+        setContent(data.data.content);
+        setAuthor(data.data.author);
+        setCategory(data.data.category);
+        setImageUrl(data.data.imageUrl || '');
       } catch (error) {
-        console.error(error);
-        toast.error('Failed to load post');
-        router.push('/admin');
-        setLoading(false);
+        console.error('Erro ao carregar o post:', error.message);
       }
     };
 
     fetchPost();
-  }, [status, session, postId, router]);
+  }, [postId]);
 
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        console.log('Mutation observed:', mutation);
-      });
-    });
-
-    if (quillRef.current) {
-      observer.observe(quillRef.current, {
-        childList: true,
-        subtree: true,
-      });
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  const handleEdit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/posts', {
+      const response = await fetch(`/api/posts/${postId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -87,115 +45,51 @@ const EditPost = ({ postId }) => {
           title,
           content,
           author,
-          category: categoria,
+          category,
+          imageUrl,
         }),
       });
 
-      const data = await res.json();
-      if (data.success) {
-        toast.success('Postagem editada com sucesso!');
-        router.push('/admin');
-      } else {
-        toast.error(`Erro ao editar a postagem: ${data.error}`);
+      if (!response.ok) {
+        throw new Error(await response.text());
       }
+
+      const data = await response.json();
+      router.push(`/posts/${data.data._id}`);
     } catch (error) {
-      console.error(error);
-      toast.error('Erro ao editar a postagem');
+      console.error('Erro ao editar a postagem:', error.message);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (!post) return <div>Carregando...</div>;
 
   return (
-    <Container component="main" maxWidth="md">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Editar Post
-        </Typography>
-        <Box component="form" onSubmit={handleEdit} sx={{ mt: 3 }}>
-          <TextField
-            name="title"
-            required
-            fullWidth
-            id="title"
-            label="Título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Typography variant="h6" component="label" htmlFor="content">
-            Conteúdo
-          </Typography>
-          <ReactQuill
-            value={content}
-            onChange={(value) => setContent(value)}
-            modules={{
-              toolbar: [
-                [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-                [{size: []}],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{'list': 'ordered'}, {'list': 'bullet'}, 
-                 {'indent': '-1'}, {'indent': '+1'}],
-                ['link', 'image', 'video'],
-                ['clean']
-              ],
-            }}
-            formats={[
-              'header', 'font', 'size',
-              'bold', 'italic', 'underline', 'strike', 'blockquote',
-              'list', 'bullet', 'indent',
-              'link', 'image', 'video'
-            ]}
-            placeholder="Escreva o conteúdo aqui..."
-            ref={quillRef}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            required
-            fullWidth
-            id="author"
-            label="Autor"
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            select
-            required
-            fullWidth
-            id="categoria"
-            label="Categoria"
-            name="categoria"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            sx={{ mb: 2 }}
-          >
-            {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Editar Postagem
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+    <div>
+      <h1>Editar Post</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Título</label>
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        </div>
+        <div>
+          <label>Conteúdo</label>
+          <Editor value={content} onChange={setContent} />
+        </div>
+        <div>
+          <label>Autor</label>
+          <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} required />
+        </div>
+        <div>
+          <label>Categoria</label>
+          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
+        </div>
+        <div>
+          <label>URL da Imagem para Miniatura</label>
+          <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+        </div>
+        <button type="submit">Salvar Alterações</button>
+      </form>
+    </div>
   );
 };
 

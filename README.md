@@ -76,7 +76,7 @@ Para qualquer uso comercial do projeto, entre em contato com o autor para obter 
 
 ### Versão 1.2 (20 de Maio de 2024)
 #### Alterações
-- Introdução da função de envio de comentários por e-mail.
+- Introdução da função de envio de e-mail do usuário para os administradores dentro do blog.
 - Estilização das tags para uma melhor experiência de usuário.
 - Adicionado suporte para formatação de texto nos posts usando Quill.
 
