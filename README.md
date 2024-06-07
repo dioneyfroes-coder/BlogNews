@@ -51,6 +51,13 @@ Para qualquer uso comercial do projeto, entre em contato com o autor para obter 
 
 ## Histórico de Versões
 
+### Versão 1.6 (7 de Junho de 2024)
+#### Alterações
+- Correções na criação e edição de posts para permitir a inserção de imagens corretamente.
+- Implementação de sistema de fila para envio de emails, limitando o número de conexões simultâneas.
+- Melhorias na exibição de mensagens de erro durante a criação e edição de posts.
+- Refatoração do código para melhorar a organização e manutenção.
+
 ### Versão 1.5 (5 de Junho de 2024)
 #### Alterações
 - Nova página inicial com exibição de cards de miniaturas dos posts.
