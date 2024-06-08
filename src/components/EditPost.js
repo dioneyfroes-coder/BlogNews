@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Editor from '@/components/Editor';
+import { Container, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
+import { categories } from '@/constants/categories';
 
 const EditPost = ({ postId }) => {
   const [post, setPost] = useState(null);
@@ -22,7 +24,7 @@ const EditPost = ({ postId }) => {
         setTitle(data.data.title);
         setContent(data.data.content);
         setAuthor(data.data.author);
-        setCategory(data.data.category);
+        setCategory(data.data.category || 'Sem Categoria');
         setImageUrl(data.data.imageUrl || '');
       } catch (error) {
         console.error('Erro ao carregar o post:', error.message);
@@ -61,35 +63,65 @@ const EditPost = ({ postId }) => {
     }
   };
 
-  if (!post) return <div>Carregando...</div>;
+  if (!post) return <Container component="main" maxWidth="md"><Typography>Carregando...</Typography></Container>;
 
   return (
-    <div>
-      <h1>Editar Post</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Título</label>
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-        </div>
-        <div>
-          <label>Conteúdo</label>
-          <Editor value={content} onChange={setContent} />
-        </div>
-        <div>
-          <label>Autor</label>
-          <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} required />
-        </div>
-        <div>
-          <label>Categoria</label>
-          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
-        </div>
-        <div>
-          <label>URL da Imagem para Miniatura</label>
-          <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-        </div>
-        <button type="submit">Salvar Alterações</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="md">
+      <Typography variant="h4" component="h1" gutterBottom>
+        Editar Post
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="title"
+          label="Título"
+          name="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="category-label">Categoria</InputLabel>
+          <Select
+            labelId="category-label"
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            label="Categoria"
+          >
+            {categories.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="author"
+          label="Autor"
+          name="author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          id="imageUrl"
+          label="URL da Imagem para Miniatura"
+          name="imageUrl"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+        <Editor value={content} onChange={setContent} />
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Salvar Alterações
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

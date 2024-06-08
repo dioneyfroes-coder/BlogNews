@@ -55,18 +55,6 @@ export default async function handler(req, res) {
         await post.save();
         await handleNewPost(post); // Envia emails aos assinantes após salvar o post
 
-        // Adicionar e-mails à fila
-        const subscribers = await getSubscribers(); // Função que retorna os e-mails dos assinantes
-        for (const subscriber of subscribers) {
-          const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: subscriber.email,
-            subject: `Novo post: ${sanitizedTitle}`,
-            text: `Olá, temos um novo post: ${sanitizedTitle}\n\n${sanitizedContent}\n\nVisite nosso blog para mais informações.`,
-          };
-          addToQueue(mailOptions); // Adicionar à fila de emails
-        }
-
         res.status(201).json({ success: true, data: post });
       } catch (error) {
         res.status(400).json({ success: false, error: `Erro ao criar o post: ${error.message}` });

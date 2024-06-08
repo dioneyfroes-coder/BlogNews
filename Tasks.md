@@ -24,6 +24,8 @@ Feito-testar e corrigir se necessário os alertas de email da newsletter.
 Feito-corrigir bug de uso de imagens, não é exibido a imagem postada ou editada.
 Feito-corrigir bug que tenta enviar email para posts editados.
 Feito-fazer algo sobre as miniaturas dos cardposts
+Feito-corrigido erro de conexões simultâneas ao enviar emails simultâneos
+Feito-preciso trancar o tamanho dos cardposts
 
 -aplicar css para melhorar visualização em telas de:
 * tablet

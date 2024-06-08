@@ -1,4 +1,4 @@
-// src/pages/index.js
+// src/app/page.js
 
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';

@@ -55,7 +55,6 @@ Para qualquer uso comercial do projeto, entre em contato com o autor para obter 
 #### Alterações
 - Correções na criação e edição de posts para permitir a inserção de imagens corretamente.
 - Implementação de sistema de fila para envio de emails, limitando o número de conexões simultâneas.
-- Melhorias na exibição de mensagens de erro durante a criação e edição de posts.
 - Refatoração do código para melhorar a organização e manutenção.
 
 ### Versão 1.5 (5 de Junho de 2024)

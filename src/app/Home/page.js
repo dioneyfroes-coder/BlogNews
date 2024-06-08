@@ -1,3 +1,5 @@
+// src/app/Home/page.js
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -17,7 +19,7 @@ const Home = ({ initialPosts }) => {
       <NavigationBar />
       <Grid container spacing={3}>
         {posts.map((post) => (
-          <Grid item xs={12} sm={6} md={4} key={post._id} sx={{ display: 'flex' }}>
+          <Grid item xs={12} key={post._id}>
             <PostCard post={post} />
           </Grid>
         ))}
