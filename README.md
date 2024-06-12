@@ -51,6 +51,21 @@ Para qualquer uso comercial do projeto, entre em contato com o autor para obter 
 
 ## Histórico de Versões
 
+### Versão 1.7 (10 de Junho de 2024)
+#### Alterações
+- Correções de erros e melhorias gerais no código.
+- Implementação de Rate Limiting para melhorar a segurança e desempenho da API.
+- Melhorias no sistema de fila para envio de emails.
+- Atualização de dependências e remoção de opções de conexão MongoDB depreciadas.
+- Correção de aviso de imagem no Next.js e ajuste de prioridade de carregamento para LCP.
+- Sanitização de HTML usando a biblioteca DOMPurify.
+- Função sanitizeAndFixHtml para sanitizar, corrigir o HTML renderizado e para corrigir parágrafos aninhados, prevenindo o erro de hidratação no React.
+- Biblioteca html-react-parser para renderizar HTML sanitizado de forma segura.
+- Implementação de um componente Editor para edição de texto usando Quill.
+- Desenvolvimento de um componente SocialLinks para exibir e editar links de redes sociais.
+- Adição de lógica para exibir diferentes layouts dependendo do modo de visualização (leitura ou edição) e do status de autenticação do usuário.
+- Ajustes de layout e estilo para tornar toda a aplicação responsiva e esteticamente agradável em diferentes tamanhos de tela.
+
 ### Versão 1.6 (7 de Junho de 2024)
 #### Alterações
 - Correções na criação e edição de posts para permitir a inserção de imagens corretamente.
