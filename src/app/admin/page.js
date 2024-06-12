@@ -1,4 +1,3 @@
-// src/pages/admin/index.js
 "use client";
 
 import { useSession, signIn } from 'next-auth/react';
@@ -13,6 +12,7 @@ import {
   Grid,
   Paper,
 } from '@mui/material';
+import dynamic from 'next/dynamic';
 import CreatePost from '@/components/CreatePost';
 import EditPost from '@/components/EditPost';
 import DeletePost from '@/components/DeletePost';
@@ -22,6 +22,14 @@ import CategoryManager from '@/components/CategoryManager'; // Importando o novo
 import NavigationBar from '@/components/NavigationBar';
 import StatusPanel from '@/components/StatusPanel';
 import styles from '@/styles/admin.module.css';
+
+// Garantindo que certos componentes sejam carregados apenas no cliente
+const DynamicCreatePost = dynamic(() => import('@/components/CreatePost'), { ssr: false });
+const DynamicEditPost = dynamic(() => import('@/components/EditPost'), { ssr: false });
+const DynamicDeletePost = dynamic(() => import('@/components/DeletePost'), { ssr: false });
+const DynamicModerateComments = dynamic(() => import('@/components/ModerateComments'), { ssr: false });
+const DynamicCategoryManager = dynamic(() => import('@/components/CategoryManager'), { ssr: false });
+const DynamicPostSelector = dynamic(() => import('@/components/PostSelector'), { ssr: false });
 
 const Admin = () => {
   const { data: session, status } = useSession();
@@ -129,14 +137,14 @@ const Admin = () => {
           Gerenciar Categorias
         </Button>
       </div>
-      {showCreateForm && <CreatePost />}
+      {showCreateForm && <DynamicCreatePost />}
       {showEditMenu && (
         <div className={styles.sectionContainer}>
           <Typography variant="h4" className={styles.sectionHeader}>
             Selecionar Post para Editar
           </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <EditPost postId={selectedPostId} />}
+          <DynamicPostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <DynamicEditPost postId={selectedPostId} />}
         </div>
       )}
       {showDeleteMenu && (
@@ -144,8 +152,8 @@ const Admin = () => {
           <Typography variant="h4" className={styles.sectionHeader}>
             Selecionar Post para Excluir
           </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <DeletePost postId={selectedPostId} />}
+          <DynamicPostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <DynamicDeletePost postId={selectedPostId} />}
         </div>
       )}
       {showModerateComments && (
@@ -153,8 +161,8 @@ const Admin = () => {
           <Typography variant="h4" className={styles.sectionHeader}>
             Selecionar Post para Moderar Comentários
           </Typography>
-          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-          {selectedPostId && <ModerateComments postId={selectedPostId} />}
+          <DynamicPostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <DynamicModerateComments postId={selectedPostId} />}
         </div>
       )}
       {showCategoryManager && (
@@ -162,7 +170,7 @@ const Admin = () => {
           <Typography variant="h4" className={styles.sectionHeader}>
             Gerenciar Categorias
           </Typography>
-          <CategoryManager />
+          <DynamicCategoryManager />
         </div>
       )}
       {loading && <CircularProgress />}

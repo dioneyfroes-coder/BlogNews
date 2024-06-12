@@ -1,8 +1,8 @@
 // src/pages/api/subscribe.js
 
 import mongoose from 'mongoose';
-import nodemailer from 'nodemailer';
 import { sendWelcomeEmail, sendGoodbyeEmail } from '../../lib/mailer';
+import rateLimiter from '@/lib/rateLimit';
 
 const emailSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -25,40 +25,42 @@ const isValidEmail = (email) => {
 };
 
 export default async function handler(req, res) {
-  await connectDb();
+    await rateLimiter(req, res, async () => {
+        await connectDb();
 
-  const { email } = req.body;
+        const { email } = req.body;
 
-  if (!isValidEmail(email)) {
-    return res.status(400).json({ message: 'Email inválido.' });
-  }
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ message: 'Email inválido.' });
+        }
 
-  if (req.method === 'POST') {
-    try {
-      const existingEmail = await Email.findOne({ email });
-      if (existingEmail) {
-        return res.status(200).json({ message: 'Este email já está inscrito.' });
-      }
+        if (req.method === 'POST') {
+            try {
+                const existingEmail = await Email.findOne({ email });
+                if (existingEmail) {
+                    return res.status(200).json({ message: 'Este email já está inscrito.' });
+                }
 
-      const newEmail = new Email({ email });
-      await newEmail.save();
-      sendWelcomeEmail(email);
-      return res.status(201).json({ message: 'Inscrição realizada com sucesso' });
-    } catch (error) {
-      return res.status(500).json({ message: 'Erro ao inscrever-se.' });
-    }
-  } else if (req.method === 'DELETE') {
-    try {
-      const emailDoc = await Email.findOneAndDelete({ email });
-      if (!emailDoc) {
-        return res.status(400).json({ message: 'Email não encontrado.' });
-      }
-      sendGoodbyeEmail(email);
-      return res.status(200).json({ message: 'Desinscrição realizada com sucesso' });
-    } catch (error) {
-      return res.status(500).json({ message: 'Erro ao desinscrever-se.' });
-    }
-  } else {
-    return res.status(405).end(); // Método não permitido
-  }
+                const newEmail = new Email({ email });
+                await newEmail.save();
+                sendWelcomeEmail(email);
+                return res.status(201).json({ message: 'Inscrição realizada com sucesso' });
+            } catch (error) {
+                return res.status(500).json({ message: 'Erro ao inscrever-se.' });
+            }
+        } else if (req.method === 'DELETE') {
+            try {
+                const emailDoc = await Email.findOneAndDelete({ email });
+                if (!emailDoc) {
+                    return res.status(400).json({ message: 'Email não encontrado.' });
+                }
+                sendGoodbyeEmail(email);
+                return res.status(200).json({ message: 'Desinscrição realizada com sucesso' });
+            } catch (error) {
+                return res.status(500).json({ message: 'Erro ao desinscrever-se.' });
+            }
+        } else {
+            return res.status(405).end(); // Método não permitido
+        }
+    });
 }

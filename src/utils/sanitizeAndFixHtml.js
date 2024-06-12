@@ -1,5 +1,4 @@
 import DOMPurify from 'dompurify';
-import sanitize from 'sanitize-html';
 
 const sanitizeAndFixHtml = (html) => {
   const cleanHtml = DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });

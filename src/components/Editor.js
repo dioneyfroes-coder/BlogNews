@@ -1,6 +1,4 @@
-// src/components/Editor.js
-
-import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
+import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -64,6 +62,24 @@ const Editor = forwardRef((props, ref) => {
       props.onChange(content, delta, source, editor);
     }
   };
+
+  useEffect(() => {
+    const quill = quillRef.current.getEditor();
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          console.log('Node inserted:', mutation.addedNodes);
+        }
+      });
+    });
+
+    observer.observe(quill.root, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div>
