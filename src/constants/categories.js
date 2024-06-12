@@ -7,3 +7,10 @@ export const addCategory = (newCategory) => {
     categories.push(newCategory);
   }
 };
+
+export const removeCategory = (categoryToRemove) => {
+  const index = categories.indexOf(categoryToRemove);
+  if (index > -1) {
+    categories.splice(index, 1);
+  }
+};

@@ -1,6 +1,6 @@
 // src/components/PostCard.js
 
-import { Card, CardActionArea, CardContent, Typography, Box, IconButton, Badge, Grid } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography, Box, IconButton, Badge } from '@mui/material';
 import { ThumbUp, Comment } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
@@ -18,9 +18,9 @@ const PostCard = ({ post }) => {
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        height: { xs: 'auto', md: '150px' }, // Altura fixa para telas maiores
-        maxWidth: { xs: '100%', md: '950px' }, // Tamanho máximo para telas maiores
-        margin: '10px auto' // Centraliza o card horizontalmente
+        height: { xs: 'auto', md: '150px' },
+        maxWidth: { xs: '100%', md: '950px' },
+        margin: '10px auto'
       }}
     >
       <CardActionArea 

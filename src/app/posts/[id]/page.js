@@ -97,7 +97,9 @@ const PostPage = ({ params }) => {
             <Typography variant="caption" display="block" gutterBottom>
               By {post.author}
             </Typography>
-            <Typography variant="body1" color="text.primary" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+            <Typography variant="body1" color="text.primary" component="div">
+              <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+            </Typography>
             <Box>
               <Button onClick={handleLike}>Like ({likes})</Button>
               <IconButton onClick={() => setShowCommentBox(!showCommentBox)}>

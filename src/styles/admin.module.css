@@ -15,6 +15,7 @@
 .buttonGroup {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; /* Adiciona flexibilidade para ajustar os botões em várias linhas se necessário */
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -28,6 +29,8 @@
   width: 100%;
   max-width: 800px;
   margin-bottom: 2rem;
+  padding: 0 1rem; /* Adicionado padding para evitar corte na direita */
+  box-sizing: border-box; /* Garantir que o padding seja incluído na largura total */
 }
 
 .sectionHeader {
@@ -61,15 +64,14 @@
 
 /* Styles specific to StatusPanel */
 .statusPanel {
-  position: fixed;
-  right: 2rem;
-  top: 5rem;
-  width: 250px;
   background-color: var(--bg-color); /* Use CSS variables to adapt to dark mode */
   color: var(--text-color); /* Use CSS variables to adapt to dark mode */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 1rem;
   border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 2rem; /* Adicionado para dar espaço acima do painel */
 }
 
 .statusPanelHeader {
@@ -82,4 +84,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .adminHeader {
+    font-size: 2rem; /* Reduzir o tamanho do título */
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttonGroup button {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+
+  .sectionContainer {
+    padding: 0 1rem; /* Adicionar padding para evitar corte na direita */
+    box-sizing: border-box; /* Garantir que o padding seja incluído na largura total */
+  }
+
+  .sectionHeader {
+    font-size: 1.25rem; /* Reduzir o tamanho do título */
+  }
 }

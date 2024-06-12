@@ -1,10 +1,15 @@
+import { Container, Typography, Box } from '@mui/material';
+
 const Footer = () => {
-    return (
-      <footer style={{ padding: '20px', textAlign: 'center' }}>
-        <p>© 2024 <u>Blog News</u>.  Todos os direitos reservados.</p>
-      </footer>
-    );
-  };
-  
-  export default Footer;
-  
+  return (
+    <Box component="footer" sx={{ py: 3, textAlign: 'center', backgroundColor: 'background.paper' }}>
+      <Container maxWidth="md">
+        <Typography variant="body2" color="textSecondary">
+          © 2024 <Typography variant="body2" component="span" sx={{ textDecoration: 'underline' }}>Blog News</Typography>. Todos os direitos reservados.
+        </Typography>
+      </Container>
+    </Box>
+  );
+};
+
+export default Footer;

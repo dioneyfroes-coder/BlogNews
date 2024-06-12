@@ -1,3 +1,4 @@
+// src/pages/admin/index.js
 "use client";
 
 import { useSession, signIn } from 'next-auth/react';
@@ -17,8 +18,9 @@ import EditPost from '@/components/EditPost';
 import DeletePost from '@/components/DeletePost';
 import PostSelector from '@/components/PostSelector';
 import ModerateComments from '@/components/ModerateComments';
+import CategoryManager from '@/components/CategoryManager'; // Importando o novo componente
 import NavigationBar from '@/components/NavigationBar';
-import StatusPanel from '@/components/StatusPanel'; // Import the new StatusPanel component
+import StatusPanel from '@/components/StatusPanel';
 import styles from '@/styles/admin.module.css';
 
 const Admin = () => {
@@ -31,6 +33,7 @@ const Admin = () => {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const [showDeleteMenu, setShowDeleteMenu] = useState(false);
   const [showModerateComments, setShowModerateComments] = useState(false);
+  const [showCategoryManager, setShowCategoryManager] = useState(false); // Novo estado
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -64,6 +67,7 @@ const Admin = () => {
     setShowEditMenu(false);
     setShowDeleteMenu(false);
     setShowModerateComments(false);
+    setShowCategoryManager(false);
   };
 
   const handleEditClick = () => {
@@ -71,6 +75,7 @@ const Admin = () => {
     setShowCreateForm(false);
     setShowDeleteMenu(false);
     setShowModerateComments(false);
+    setShowCategoryManager(false);
   };
 
   const handleDeleteClick = () => {
@@ -78,6 +83,7 @@ const Admin = () => {
     setShowCreateForm(false);
     setShowEditMenu(false);
     setShowModerateComments(false);
+    setShowCategoryManager(false);
   };
 
   const handleModerateCommentsClick = () => {
@@ -85,6 +91,15 @@ const Admin = () => {
     setShowCreateForm(false);
     setShowEditMenu(false);
     setShowDeleteMenu(false);
+    setShowCategoryManager(false);
+  };
+
+  const handleManageCategoriesClick = () => {
+    setShowCategoryManager(true);
+    setShowCreateForm(false);
+    setShowEditMenu(false);
+    setShowDeleteMenu(false);
+    setShowModerateComments(false);
   };
 
   const handlePostSelect = (e) => {
@@ -94,59 +109,64 @@ const Admin = () => {
   return (
     <Container className={styles.adminContainer}>
       <NavigationBar />
-      <Typography variant="h1" className={styles.adminHeader}>
+      <Typography variant="h3" className={styles.adminHeader}>
         Página de Administração
       </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <div className={styles.buttonGroup}>
-            <Button variant="contained" color="primary" onClick={handleCreateClick}>
-              Criar Post
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleEditClick}>
-              Editar Post
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleDeleteClick}>
-              Excluir Post
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleModerateCommentsClick}>
-              Moderação de Comentários
-            </Button>
-          </div>
-          {showCreateForm && <CreatePost />}
-          {showEditMenu && (
-            <div className={styles.sectionContainer}>
-              <Typography variant="h2" className={styles.sectionHeader}>
-                Selecionar Post para Editar
-              </Typography>
-              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-              {selectedPostId && <EditPost postId={selectedPostId} />}
-            </div>
-          )}
-          {showDeleteMenu && (
-            <div className={styles.sectionContainer}>
-              <Typography variant="h2" className={styles.sectionHeader}>
-                Selecionar Post para Excluir
-              </Typography>
-              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-              {selectedPostId && <DeletePost postId={selectedPostId} />}
-            </div>
-          )}
-          {showModerateComments && (
-            <div className={styles.sectionContainer}>
-              <Typography variant="h2" className={styles.sectionHeader}>
-                Selecionar Post para Moderar Comentários
-              </Typography>
-              <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
-              {selectedPostId && <ModerateComments postId={selectedPostId} />}
-            </div>
-          )}
-          {loading && <CircularProgress />}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <StatusPanel />
-        </Grid>
-      </Grid>
+      <div className={styles.buttonGroup}>
+        <Button variant="contained" color="primary" onClick={handleCreateClick}>
+          Criar Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleEditClick}>
+          Editar Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleDeleteClick}>
+          Excluir Post
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleModerateCommentsClick}>
+          Moderação de Comentários
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleManageCategoriesClick}>
+          Gerenciar Categorias
+        </Button>
+      </div>
+      {showCreateForm && <CreatePost />}
+      {showEditMenu && (
+        <div className={styles.sectionContainer}>
+          <Typography variant="h4" className={styles.sectionHeader}>
+            Selecionar Post para Editar
+          </Typography>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <EditPost postId={selectedPostId} />}
+        </div>
+      )}
+      {showDeleteMenu && (
+        <div className={styles.sectionContainer}>
+          <Typography variant="h4" className={styles.sectionHeader}>
+            Selecionar Post para Excluir
+          </Typography>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <DeletePost postId={selectedPostId} />}
+        </div>
+      )}
+      {showModerateComments && (
+        <div className={styles.sectionContainer}>
+          <Typography variant="h4" className={styles.sectionHeader}>
+            Selecionar Post para Moderar Comentários
+          </Typography>
+          <PostSelector posts={posts} loading={loading} handlePostSelect={handlePostSelect} />
+          {selectedPostId && <ModerateComments postId={selectedPostId} />}
+        </div>
+      )}
+      {showCategoryManager && (
+        <div className={styles.sectionContainer}>
+          <Typography variant="h4" className={styles.sectionHeader}>
+            Gerenciar Categorias
+          </Typography>
+          <CategoryManager />
+        </div>
+      )}
+      {loading && <CircularProgress />}
+      <StatusPanel className={styles.statusPanel} />
     </Container>
   );
 };

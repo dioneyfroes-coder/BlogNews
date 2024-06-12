@@ -27,20 +27,17 @@ Feito-fazer algo sobre as miniaturas dos cardposts
 Feito-corrigido erro de conexões simultâneas ao enviar emails simultâneos
 Feito-preciso trancar o tamanho dos cardposts
 
--aplicar css para melhorar visualização em telas de:
-* tablet
-* celular
+Feito-aplicar responsividade em resoluções menores
 
-- teste geral da aplicação
+Feito na medida do possivel-aplicar SEO
+Feito-melhorar código
+Feito*refatoração?
+Feito*confiabilidade?
+Feito*melhorar a estrutura de pastas e arquivos?
+Feito*melhorar desempenho da aplicação?
+
+Feito- teste geral da aplicação
 * correção de erros e inconsistencias
-
--aplicar SEO
--melhorar código
-*refatoração
-*confiabilidade
-*melhorar a estrutura de pastas e arquivos
-*aplicar typescrypt?
-*melhorar desempenho da aplicação
 
 -criar documentação da aplicação toda.
 

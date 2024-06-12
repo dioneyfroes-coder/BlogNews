@@ -1,15 +1,17 @@
 // src/components/ImageThumbnail.js
 
 import React from 'react';
-import { CardMedia } from '@mui/material';
+import Image from 'next/image';
 
 const ImageThumbnail = ({ imageUrl, altText }) => {
   return (
-    <CardMedia
-      component="img"
-      height="140"
-      image={imageUrl || '/default-image.jpg'}
+    <Image
+      src={imageUrl || '/default-image.jpg'}
       alt={altText}
+      width={500}
+      height={300}
+      style={{ objectFit: 'cover' }} // Substitui objectFit="cover"
+      priority 
     />
   );
 };

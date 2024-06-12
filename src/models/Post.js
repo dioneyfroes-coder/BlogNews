@@ -15,7 +15,7 @@ const PostSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now }
     }
   ],
-  category: { type: String, required: true }, // Campo de categoria
+  category: { type: String, default: 'Sem Categoria', required: false }, // Campo de categoria
   imageUrl: { type: String, default: '' }, // Campo opcional para a URL da imagem
 }, { timestamps: true });
 
