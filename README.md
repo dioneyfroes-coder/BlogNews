@@ -1,1 +1,1 @@
-projeto de blog de noticias feito em nextjs.
+o projeto final está na branch v1.7 !
