@@ -1,10 +1,10 @@
 # Projeto: Blog News
 
 ## Descrição
-O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele permite aos usuários visualizar, criar, editar e excluir postagens de blog. A aplicação também inclui autenticação de usuário com NextAuth.js e funcionalidades de administração para usuários autorizados.
+O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele permite aos usuários autorizados visualizar, criar, editar e excluir postagens de blog. A aplicação também inclui autenticação de usuário com NextAuth.js e funcionalidades de administração para usuários autorizados.
 
 ## Recursos
-- Visualizar postagens de blog na página inicial.
+- Visualizar cards dos posts na página inicial e abri-los numa página propria.
 - Criar novas postagens de blog.
 - Editar postagens existentes.
 - Excluir postagens de blog.
@@ -32,14 +32,32 @@ O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele
 - `middleware/`: Contém os middlewares da aplicação.
 - `constants/`: Contém constantes usadas na aplicação.
 - `contexts/`: Contém os contextos de estado global da aplicação.
+- `hooks/`: contém os hooks.
 
-## Tecnologias Utilizadas
-- Next.js
-- React
-- MongoDB
-- NextAuth.js
-- Material UI
-- Toast
+## Dependencias
+    @emotion/react: 11.11.4
+    @emotion/styled: 11.11.5
+    @fontsource/roboto: 5.0.13
+    @mui/icons-material: 5.15.18
+    @mui/material: 5.15.19
+    bcryptjs: 2.4.3
+    bull: 4.12.9
+    dompurify: 3.1.5
+    dotenv: 16.4.5
+    express-rate-limit: 7.3.1
+    html-react-parser: 5.1.10
+    mongoose: 8.4.0
+    next: 14.2.3
+    next-auth: 4.24.7
+    nodemailer: 6.9.13
+    quill: 2.0.2
+    react: 18
+    react-dom: 18
+    react-quill: 2.0.0
+    react-toastify: 10.0.5
+    react-virtualized: 9.22.5
+    react-window: 1.8.10
+    sanitize-html: 2.13.0
 
 ## Autor
 dioney froes januario

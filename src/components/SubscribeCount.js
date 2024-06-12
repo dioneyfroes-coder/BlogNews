@@ -11,8 +11,7 @@ const SubscribeCount = () => {
         throw new Error('Failed to fetch subscriber count');
       }
       const data = await response.json();
-      console.log('Data fetched from API:', data);
-      setCount(data.count);
+        setCount(data.count);
     } catch (error) {
       console.error('Erro ao obter contagem de inscritos:', error);
     }

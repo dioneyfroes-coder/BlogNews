@@ -17,7 +17,7 @@ const CategoryFilter = ({ searchCategory, setSearchCategory }) => {
 
   return (
     <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
-      <InputLabel>Categoria</InputLabel>
+      <InputLabel>Categorias</InputLabel>
       <Select
         value={searchCategory}
         onChange={handleCategoryChange}

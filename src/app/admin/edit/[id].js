@@ -47,10 +47,10 @@ const EditPostPage = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Carregando...</div>;
   }
 
-  return post ? <EditPost post={post} /> : <div>Post not found</div>;
+  return post ? <EditPost post={post} /> : <div>Post não encontrado!</div>;
 };
 
 export default EditPostPage;

@@ -23,7 +23,7 @@ const AboutPage = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>Sobre Nós</Typography>
+      <Typography variant="h4" gutterBottom></Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <ImageThumbnail imageUrl={aboutData.imageURL} altText="About Us" />

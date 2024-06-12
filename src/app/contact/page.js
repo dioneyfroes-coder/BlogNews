@@ -52,7 +52,7 @@ export default function Contact() {
       <NavigationBar />
       <Box component="section" sx={{ mt: 4, mb: 4 }}>
         <Typography component="header" variant="h3" gutterBottom>
-          Contacte-nos
+          Me envie um e-mail diretamente daqui!
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate autoComplete="off">
           <FormControl fullWidth margin="normal" error={Boolean(errors.name)}>

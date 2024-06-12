@@ -1,7 +1,7 @@
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
 
-export default async (req, res) => {
+const handler = async (req, res) => {
   const { method } = req;
   const { id } = req.query;
 
@@ -50,3 +50,5 @@ export default async (req, res) => {
       break;
   }
 };
+
+export default handler;

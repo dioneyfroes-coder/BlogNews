@@ -81,4 +81,6 @@ const Editor = forwardRef((props, ref) => {
   );
 });
 
+Editor.displayName = 'Editor';
+
 export default Editor;

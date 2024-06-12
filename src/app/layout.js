@@ -8,12 +8,12 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Blog News",
-  description: "Um blog de notícias construído com Next.js",
+  title: "Blog",
+  description: "Um blog construído com Next.js",
   charset: "UTF-8",
   robots: "index, follow",
   author: "Dioney Froes Januario",
-  keywords: "notícias, blog, tecnologia, atualidades",
+  keywords: "aplicação web, blog, tecnologia, programação",
   icons: {
     icon: { url: "/favicon.png", type: "image/png" },
   },

@@ -37,7 +37,7 @@ Feito*melhorar a estrutura de pastas e arquivos?
 Feito*melhorar desempenho da aplicação?
 
 Feito- teste geral da aplicação
-* correção de erros e inconsistencias
+Feito correção de erros e inconsistencias
 
 -criar documentação da aplicação toda.
 
