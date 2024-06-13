@@ -9,21 +9,12 @@ import {
   Typography,
   Button,
   CircularProgress,
-  Grid,
-  Paper,
 } from '@mui/material';
 import dynamic from 'next/dynamic';
-import CreatePost from '@/components/CreatePost';
-import EditPost from '@/components/EditPost';
-import DeletePost from '@/components/DeletePost';
-import PostSelector from '@/components/PostSelector';
-import ModerateComments from '@/components/ModerateComments';
-import CategoryManager from '@/components/CategoryManager'; // Importando o novo componente
 import NavigationBar from '@/components/NavigationBar';
 import StatusPanel from '@/components/StatusPanel';
 import styles from '@/styles/admin.module.css';
 
-// Garantindo que certos componentes sejam carregados apenas no cliente
 const DynamicCreatePost = dynamic(() => import('@/components/CreatePost'), { ssr: false });
 const DynamicEditPost = dynamic(() => import('@/components/EditPost'), { ssr: false });
 const DynamicDeletePost = dynamic(() => import('@/components/DeletePost'), { ssr: false });
@@ -41,7 +32,7 @@ const Admin = () => {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const [showDeleteMenu, setShowDeleteMenu] = useState(false);
   const [showModerateComments, setShowModerateComments] = useState(false);
-  const [showCategoryManager, setShowCategoryManager] = useState(false); // Novo estado
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {

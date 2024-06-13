@@ -69,7 +69,6 @@ const Editor = forwardRef((props, ref) => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          console.log('Node inserted:', mutation.addedNodes);
         }
       });
     });
