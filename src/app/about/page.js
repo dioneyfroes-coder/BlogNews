@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { TextField, Box, Typography, Button, Grid } from '@mui/material';
 import dynamic from 'next/dynamic';
@@ -8,7 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { WhatsApp } from '@mui/icons-material';
 import ImageThumbnail from '@/components/ImageThumbnail';
 import useAboutData from '@/hooks/useAboutData';
-import sanitizeAndFixHtml from '@/utils/sanitizeAndFixHtml'; // Verifique este import
+import sanitizeAndFixHtml from '@/utils/sanitizeAndFixHtml';
 import SocialLinks from '@/components/SocialLinks';
 
 const QuillNoSSRWrapper = dynamic(() => import('react-quill'), { ssr: false });
@@ -16,6 +16,13 @@ const QuillNoSSRWrapper = dynamic(() => import('react-quill'), { ssr: false });
 const AboutPage = () => {
   const { data: session } = useSession();
   const { aboutData, setAboutData, saveAboutData } = useAboutData();
+  const [sanitizedHtml, setSanitizedHtml] = useState('');
+
+  useEffect(() => {
+    if (aboutData?.text) {
+      setSanitizedHtml(sanitizeAndFixHtml(aboutData.text));
+    }
+  }, [aboutData]);
 
   if (!aboutData) {
     return <Typography>Carregando...</Typography>;
@@ -108,7 +115,7 @@ const AboutPage = () => {
             ) : (
               <>
                 <Typography variant="h5">{aboutData.title}</Typography>
-                <Box mt={2} dangerouslySetInnerHTML={{ __html: sanitizeAndFixHtml(aboutData.text) }} />
+                <Box mt={2} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
                 <Box mt={2}>
                   <WhatsApp /> {aboutData.whatsapp}
                 </Box>
