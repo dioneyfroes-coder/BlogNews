@@ -8,7 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { WhatsApp } from '@mui/icons-material';
 import ImageThumbnail from '@/components/ImageThumbnail';
 import useAboutData from '@/hooks/useAboutData';
-import sanitizeAndFixHtml from '@/utils/sanitizeAndFixHtml';
+import sanitizeAndFixHtml from '@/utils/sanitizeAndFixHtml'; // Verifique este import
 import SocialLinks from '@/components/SocialLinks';
 
 const QuillNoSSRWrapper = dynamic(() => import('react-quill'), { ssr: false });
@@ -30,7 +30,7 @@ const AboutPage = () => {
             <Box mt={2}>
               <TextField
                 label="URL da Imagem"
-                value={aboutData.imageURL || ''}
+                value={aboutData.imageURL}
                 onChange={(e) => setAboutData({ ...aboutData, imageURL: e.target.value })}
                 fullWidth
                 margin="normal"
@@ -44,14 +44,14 @@ const AboutPage = () => {
               <>
                 <TextField
                   label="Título"
-                  value={aboutData.title || ''}
+                  value={aboutData.title}
                   onChange={(e) => setAboutData({ ...aboutData, title: e.target.value })}
                   fullWidth
                   margin="normal"
                 />
                 <Box mt={2}>
                   <QuillNoSSRWrapper
-                    value={aboutData.text || ''}
+                    value={aboutData.text}
                     onChange={(value) => setAboutData({ ...aboutData, text: value })}
                     theme="snow"
                   />
@@ -59,7 +59,7 @@ const AboutPage = () => {
                 <Box mt={2}>
                   <TextField
                     label="Telefone"
-                    value={aboutData.phone || ''}
+                    value={aboutData.phone}
                     onChange={(e) => setAboutData({ ...aboutData, phone: e.target.value })}
                     fullWidth
                     margin="normal"
@@ -68,7 +68,7 @@ const AboutPage = () => {
                 <Box mt={2}>
                   <TextField
                     label="WhatsApp"
-                    value={aboutData.whatsapp || ''}
+                    value={aboutData.whatsapp}
                     onChange={(e) => setAboutData({ ...aboutData, whatsapp: e.target.value })}
                     fullWidth
                     margin="normal"
@@ -77,7 +77,7 @@ const AboutPage = () => {
                 <Box mt={2}>
                   <TextField
                     label="Endereço"
-                    value={aboutData.address || ''}
+                    value={aboutData.address}
                     onChange={(e) => setAboutData({ ...aboutData, address: e.target.value })}
                     fullWidth
                     margin="normal"
@@ -86,7 +86,7 @@ const AboutPage = () => {
                 <Box mt={2}>
                   <TextField
                     label="Email"
-                    value={aboutData.email || ''}
+                    value={aboutData.email}
                     onChange={(e) => setAboutData({ ...aboutData, email: e.target.value })}
                     fullWidth
                     margin="normal"
@@ -94,7 +94,7 @@ const AboutPage = () => {
                 </Box>
                 <Box mt={2}>
                   <SocialLinks
-                    socialLinks={aboutData.socialLinks || []}
+                    socialLinks={aboutData.socialLinks}
                     setSocialLinks={(newLinks) => setAboutData({ ...aboutData, socialLinks: newLinks })}
                     isEditable={true}
                   />
