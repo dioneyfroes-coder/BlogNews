@@ -1,25 +1,50 @@
-# Projeto: Blog News
+# Projeto: Blog 
 
 ## Descrição
-O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele permite aos usuários autorizados visualizar, criar, editar e excluir postagens de blog. A aplicação também inclui autenticação de usuário com NextAuth.js e funcionalidades de administração para usuários autorizados.
+O Blog  é uma aplicação web construída com Next.js, React e MongoDB. Ele permite aos usuários autorizados visualizar, criar, editar e excluir postagens de blog. A aplicação também inclui autenticação de usuário com NextAuth.js e funcionalidades de administração para usuários autorizados.
+
+[Veja a aplicação online](https://blog-two-sable-17.vercel.app/)
 
 ## Recursos
-- Visualizar cards dos posts na página inicial e abri-los numa página propria.
+- Visualizar cards dos posts na página inicial e abri-los numa página própria.
 - Criar novas postagens de blog.
 - Editar postagens existentes.
 - Excluir postagens de blog.
 - Autenticação de usuário com NextAuth.js.
 - Funcionalidades de administração para usuários autorizados.
-- Like e comentar nas postagens.
+- Curtir e comentar nas postagens.
 - Filtro de postagens por categorias.
 - Navegação de histórico de postagens por datas.
 - Newsletter funcional.
 
 ## Instruções de Instalação
-1. Clone o repositório para sua máquina local.
-2. Instale as dependências utilizando npm ou yarn: `npm install` ou `yarn install`.
-3. Configure as variáveis de ambiente no arquivo `.env.local`.
-4. Inicie o servidor de desenvolvimento com o comando `npm run dev` ou `yarn dev`.
+1. Clone o repositório para sua máquina local:
+    ```bash
+    git clone https://github.com/dioneyfroes-coder/BlogNews.git
+    cd BlogNews
+    ```
+2. Instale as dependências utilizando npm ou yarn:
+    ```bash
+    npm install
+    # ou
+    yarn install
+    ```
+3. Configure as variáveis de ambiente no arquivo `.env.local`:
+    ```plaintext
+    NEXT_PUBLIC_API_URL=http://example.com/api
+    NEXTAUTH_URL=http://localhost:3000
+    DATABASE_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/blognews?retryWrites=true&w=majority
+    NEXTAUTH_SECRET=your-secret-key
+    ```
+
+## Uso
+
+### Rodando Localmente
+Para iniciar o servidor de desenvolvimento:
+```bash
+npm run dev
+# ou
+yarn dev
 
 ## Estrutura do Projeto
 - `app/`: Contém as páginas da aplicação.
@@ -32,7 +57,7 @@ O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele
 - `middleware/`: Contém os middlewares da aplicação.
 - `constants/`: Contém constantes usadas na aplicação.
 - `contexts/`: Contém os contextos de estado global da aplicação.
-- `hooks/`: contém os hooks.
+- `hooks/`: Contém os hooks.
 
 ## Dependencias
     @emotion/react: 11.11.4
@@ -58,6 +83,16 @@ O Blog News é uma aplicação web construída com Next.js, React e MongoDB. Ele
     react-virtualized: 9.22.5
     react-window: 1.8.10
     sanitize-html: 2.13.0
+
+## Contribuição
+
+# Contribuições são bem-vindas! Siga os passos abaixo para contribuir:
+
+Faça um fork do repositório.
+Crie uma branch para sua feature (git checkout -b feature/MinhaFeature).
+Faça commit das suas alterações (git commit -m 'Adiciona minha feature').
+Faça push para a branch (git push origin feature/MinhaFeature).
+Abra um Pull Request.
 
 ## Autor
 dioney froes januario
