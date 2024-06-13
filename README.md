@@ -97,10 +97,18 @@ Abra um Pull Request.
 ## Autor
 dioney froes januario
 
-## Licença: CC BY-NC (Creative Commons Atribuição-NãoComercial)
-Este projeto está licenciado sob a Licença Creative Commons Atribuição-NãoComercial (CC BY-NC).
-Isso significa que você tem permissão para usar, copiar, distribuir e modificar o projeto, desde que não o utilize para fins comerciais.
-Para qualquer uso comercial do projeto, entre em contato com o autor para obter permissão.
+Licença: CC BY-NC-ND (Creative Commons Atribuição-NãoComercial-SemDerivações)
+
+Este projeto está licenciado sob a Licença Creative Commons Atribuição-NãoComercial-SemDerivações (CC BY-NC-ND). Isso significa que você tem permissão para usar**, copiar e distribuir o projeto para fins não comerciais, desde que o material seja passado adiante sem modificações e em formato integral, e que o crédito seja dado a você. Não é permitido o uso comercial deste projeto sem a permissão expressa do autor. Para qualquer uso comercial ou para postar este projeto na internet para uso pessoal ou comercial, entre em contato com o autor para negociações e obtenção de permissão.
+
+"Usar o projeto", se refere a qualquer interação com o conteúdo do projeto que vai além da simples visualização. Isso pode incluir, mas não se limita a:
+
+Estudar: Isso envolve ler, aprender e entender o projeto. Pode incluir a análise do código, estrutura, conteúdo, etc.
+Copiar: Isso envolve fazer uma cópia exata do projeto.
+Distribuir: Isso envolve compartilhar o projeto com outras pessoas.
+Modificar: Isso envolve fazer alterações no projeto, como adicionar novas funcionalidades, corrigir erros, melhorar o design, etc.
+
+Qualquer uso comercial ou postagem deste projeto na internet para uso pessoal ou comercial requer a permissão expressa do autor.
 
 ## Histórico de Versões
 
