@@ -10,12 +10,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-  if (!token || !['admin', 'editor', 'redator'].includes((token as any).role)) {
-    return res.status(401).json({ success: false, error: 'Não autorizado' });
-  }
-
   const sanitizeInput = (input: string) => {
     return sanitizeHtml(input, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'div', 'pre', 'ul', 'ol', 'li', 'a', 'b', 'i', 'u', 's', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
@@ -32,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (req.method) {
     case 'GET':
       try {
-        const posts = await Post.find({});
+        const posts = await Post.find({}).sort({ createdAt: -1 });
         res.status(200).json({ success: true, data: posts });
       } catch (error: any) {
         res.status(400).json({ success: false, error: `Erro ao buscar posts: ${error.message}` });
@@ -40,6 +34,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
 
     case 'POST':
+      // Para operações de escrita, verificar autenticação
+      const tokenPost = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      if (!tokenPost || !['admin', 'editor', 'redator'].includes((tokenPost as any).role)) {
+        return res.status(401).json({ success: false, error: 'Não autorizado' });
+      }
+
       await rateLimiter(req, res, async () => {
         try {
           const { title, content, author, category, imageUrl } = req.body;
@@ -63,6 +63,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
 
     case 'PUT':
+      // Para operações de escrita, verificar autenticação
+      const tokenPut = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      if (!tokenPut || !['admin', 'editor', 'redator'].includes((tokenPut as any).role)) {
+        return res.status(401).json({ success: false, error: 'Não autorizado' });
+      }
       await rateLimiter(req, res, async () => {
         try {
           const { id, title, content, author, category, imageUrl } = req.body;
@@ -87,6 +92,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
 
     case 'DELETE':
+      // Para operações de escrita, verificar autenticação
+      const tokenDelete = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      if (!tokenDelete || !['admin', 'editor', 'redator'].includes((tokenDelete as any).role)) {
+        return res.status(401).json({ success: false, error: 'Não autorizado' });
+      }
+
       await rateLimiter(req, res, async () => {
         try {
           const { id } = req.query;
