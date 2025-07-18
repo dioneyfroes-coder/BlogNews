@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\dioney\Documents\projeto\alt blog\BlogNews\jest.setup.ts -->
 import '@testing-library/jest-dom';
 
 // Mock do Next.js router
