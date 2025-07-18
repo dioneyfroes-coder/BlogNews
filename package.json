@@ -19,7 +19,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.0.13",
-    "@mui/icons-material": "^7.2.0",
+    "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "bcryptjs": "^2.4.3",
     "bull": "^4.12.9",
@@ -62,5 +62,9 @@
     "inflight": "npm:@nodelib/fs.walk@^1.2.8",
     "rimraf": "^6.0.1",
     "glob": "^10.3.10"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "npm@10.0.0"
 }
