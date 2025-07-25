@@ -1,27 +1,44 @@
-// src/pages/api/grouped-posts.ts
-
-import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '@/lib/mongodb';
+// src/pages/api/grouped-posts.js
+import connectToDatabase from '@/lib/mongodb';
 import Post from '@/models/Post';
-import { groupPostsByDate } from '@/utils/groupPostsByDate';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await dbConnect();
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-  switch (req.method) {
-    case 'GET':
-      try {
-        const posts = await Post.find({});
-        const groupedPosts = groupPostsByDate(posts);
-        res.status(200).json({ success: true, data: groupedPosts });
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        res.status(400).json({ success: false, error: errorMessage });
+  try {
+    await connectToDatabase();
+
+    // Buscar todos os posts publicados
+    const posts = await Post.find({ published: true })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // Agrupar posts por data
+    const groupedPosts: { [date: string]: typeof posts } = {};
+    
+    posts.forEach(post => {
+      const date = new Date(post.createdAt).toISOString().split('T')[0];
+      if (!groupedPosts[date]) {
+        groupedPosts[date] = [];
       }
-      break;
+      groupedPosts[date].push(post);
+    });
 
-    default:
-      res.status(405).json({ success: false, error: 'Método não permitido' });
-      break;
+    res.status(200).json({
+      success: true,
+      data: groupedPosts,
+      total: posts.length
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar posts agrupados:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor'
+    });
   }
 }

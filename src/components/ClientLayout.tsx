@@ -1,33 +1,15 @@
 "use client";
 
-import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
-import { useEffect, ReactNode } from 'react';
-import Header from './Header';
+import { ReactNode } from 'react';
+import { Box, Container } from '@mui/material';
+import BlogHeader from './Header';
 import Footer from './Footer';
-import { ThemeProvider as MuiThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
-
-interface CustomMuiThemeProviderProps {
-  children: ReactNode;
-}
-
-const CustomMuiThemeProvider: React.FC<CustomMuiThemeProviderProps> = ({ children }) => {
-  const { theme } = useTheme();
-
-  const muiTheme = createTheme({
-    palette: {
-      mode: theme,
-    },
-  });
-
-  return (
-    <MuiThemeProvider theme={muiTheme}>
-      <CssBaseline />
-      {children}
-    </MuiThemeProvider>
-  );
-};
+import Sidebar from './Sidebar';
+import ErrorBoundary from './ErrorBoundary';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import { NotificationProvider } from '@/providers/NotificationProvider';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -35,19 +17,75 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
-    <SessionProvider>
+    <ErrorBoundary>
       <ThemeProvider>
-        <CustomMuiThemeProvider>
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Header />
-            <main style={{ flex: '1' }}>
-              {children}
-              <ToastContainer />
-            </main>
-            <Footer />
-          </div>
-        </CustomMuiThemeProvider>
+        <NotificationProvider>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            minHeight: '100vh',
+            bgcolor: 'background.default',
+          }}>
+          <BlogHeader />
+          
+          <Box sx={{ 
+            display: 'flex', 
+            flex: 1, 
+            maxWidth: '100vw',
+            overflow: 'hidden',
+          }}>
+            {/* Sidebar fixa apenas no desktop/tablet */}
+            <Box sx={{ 
+              display: { xs: 'none', md: 'block' },
+              width: { md: 280 },
+              flexShrink: 0,
+            }}>
+              <Sidebar />
+            </Box>
+            
+            {/* Área principal de conteúdo */}
+            <Box
+              component="main"
+              sx={{ 
+                flex: 1,
+                overflow: 'auto',
+                p: { xs: 2, sm: 3 },
+                width: { xs: '100%', md: 'calc(100% - 280px)' },
+              }}
+            >
+              <Container maxWidth="lg" disableGutters>
+                {children}
+              </Container>
+            </Box>
+          </Box>
+          
+          {/* Sidebar horizontal no mobile (acima do footer) */}
+          <Box sx={{ 
+            display: { xs: 'block', md: 'none' },
+            borderTop: 1,
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+          }}>
+            <Sidebar />
+          </Box>
+          
+          <Footer />
+        </Box>
+        
+        <ToastContainer 
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        </NotificationProvider>
       </ThemeProvider>
-    </SessionProvider>
+    </ErrorBoundary>
   );
 };

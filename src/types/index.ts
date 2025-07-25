@@ -8,7 +8,11 @@ export interface Post {
   createdAt: Date;
   likes: number;
   comments: Comment[];
-  imageURL?: string;
+  imageUrl?: string;
+  published?: boolean;
+  views?: number;
+  tags?: string[];
+  excerpt?: string;
 }
 
 // Tipos para comentários
@@ -78,12 +82,6 @@ export interface MailOptions {
   to: string;
   subject: string;
   html: string;
-}
-
-// Tipos para Theme Context
-export interface ThemeContextType {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
 }
 
 // Tipos para posts agrupados por data

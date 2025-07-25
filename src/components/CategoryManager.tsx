@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, List, ListItem, IconButton, Typography } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { categories, addCategory, removeCategory } from '../constants/categories';
+import { categories, addCategory, removeCategory } from '@/lib/constants/categories';
 
 const CategoryManager: React.FC = () => {
   const [newCategory, setNewCategory] = useState('');

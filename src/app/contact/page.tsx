@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Container, Typography, Box, TextField, Button, FormControl, FormHelperText } from '@mui/material';
 import NavigationBar from '@/components/NavigationBar';
+import { emailService } from '@/services';
+import { logger } from '@/lib/logger';
 
 interface ContactErrors {
   name?: string;
@@ -17,6 +19,7 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<ContactErrors>({});
+  const [loading, setLoading] = useState(false);
 
   const validate = () => {
     const newErrors: ContactErrors = {};
@@ -34,22 +37,36 @@ export default function Contact() {
 
     if (!validate()) return;
 
-    const res = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, message }),
-    });
+    try {
+      setLoading(true);
+      logger.info('Enviando mensagem de contato', { name, email, component: 'ContactPage' });
 
-    if (res.ok) {
-      toast.success('Mensagem enviada com sucesso!');
-      setName('');
-      setEmail('');
-      setMessage('');
-      setErrors({});
-    } else {
-      toast.error('Falha ao enviar a mensagem.');
+      // Usando fetch direto pois não há um service específico para contato ainda
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (res.ok) {
+        toast.success('Mensagem enviada com sucesso!');
+        setName('');
+        setEmail('');
+        setMessage('');
+        setErrors({});
+        logger.info('Mensagem de contato enviada com sucesso', { name, email });
+      } else {
+        const errorData = await res.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Falha ao enviar a mensagem');
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Falha ao enviar a mensagem';
+      logger.error('Erro ao enviar mensagem de contato', error as Error, { name, email });
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +127,9 @@ export default function Contact() {
             variant="contained"
             color="primary"
             sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
           >
-            Enviar
+            {loading ? 'Enviando...' : 'Enviar'}
           </Button>
         </Box>
       </Box>

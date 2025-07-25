@@ -1,16 +1,18 @@
-import { Inter } from "next/font/google";
-import "../styles/globals.css";
-import ClientLayout from "@/components/ClientLayout";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import ErrorBoundary from "@/components/ErrorBoundary";
 import { ReactNode } from 'react';
+import { Roboto } from 'next/font/google';
+import '../styles/globals.css';
+import ClientLayout from "@/components/ClientLayout";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['Helvetica', 'Arial', 'sans-serif'],
+});
 
 export const metadata = {
-  title: "Blog",
-  description: "Um blog construído com Next.js",
+  title: "BlogNews",
+  description: "Um blog moderno construído com Next.js e Material-UI",
   charset: "UTF-8",
   robots: "index, follow",
   author: "Dioney Froes Januario",
@@ -32,13 +34,10 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-br">
-      <body className={inter.className}>
-        <ErrorBoundary>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
-          <ToastContainer />
-        </ErrorBoundary>
+      <body className={roboto.className}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

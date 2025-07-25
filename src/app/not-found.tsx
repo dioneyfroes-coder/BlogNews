@@ -1,34 +1,39 @@
-"use client"
-
-import React from 'react';
-import { Container, Typography, Box, Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import NavigationBar from '@/components/NavigationBar';
+// Configuração para forçar renderização apenas no cliente
+export const dynamic = 'force-dynamic';
 
 export default function NotFound() {
-  const router = useRouter();
-
-  const handleGoHome = () => {
-    router.push('/');
-  };
-
   return (
-    <Container component="main" maxWidth="md" sx={{ textAlign: 'center', mt: 8 }}>
-      <NavigationBar />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h1" component="h1" gutterBottom>
-          404
-        </Typography>
-        <Typography variant="h4" component="h2" gutterBottom>
-          Página não encontrada
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          A página que você procura não existe.
-        </Typography>
-        <Button variant="contained" color="primary" onClick={handleGoHome} sx={{ mt: 4 }}>
-          Voltar para a Página Inicial
-        </Button>
-      </Box>
-    </Container>
+    <div style={{ 
+      textAlign: 'center', 
+      marginTop: '4rem',
+      padding: '2rem',
+      maxWidth: '600px',
+      margin: '4rem auto'
+    }}>
+      <h1 style={{ fontSize: '4rem', marginBottom: '1rem', color: '#333' }}>
+        404
+      </h1>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#555' }}>
+        Página não encontrada
+      </h2>
+      <p style={{ marginBottom: '2rem', color: '#666' }}>
+        A página que você procura não existe.
+      </p>
+      <a 
+        href="/"
+        style={{
+          display: 'inline-block',
+          backgroundColor: '#1976d2',
+          color: 'white',
+          border: 'none',
+          padding: '12px 24px',
+          borderRadius: '4px',
+          textDecoration: 'none',
+          fontSize: '1rem'
+        }}
+      >
+        Voltar para a Página Inicial
+      </a>
+    </div>
   );
 }

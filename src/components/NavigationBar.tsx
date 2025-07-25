@@ -2,21 +2,28 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Drawer, List, ListItem, IconButton, Divider, Box, Typography, TextField } from '@mui/material';
-import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
+import { Drawer, List, ListItem, IconButton, Divider, Box, Typography, TextField, Button } from '@mui/material';
+import { Menu as MenuIcon, Search as SearchIcon, Login as LoginIcon, Logout as LogoutIcon, AdminPanelSettings as AdminIcon } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
+import { getCurrentUser, logout } from '../lib/auth';
+import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
 
 // Carregar os componentes dinamicamente para evitar problemas de hidratação
 const NewsLetter = dynamic(() => import('@/components/NewsLetter'), { ssr: false });
 const CategoryFilter = dynamic(() => import('@/components/CategoryFilter'), { ssr: false });
-const HistoryNavigation = dynamic(() => import('@/components/HistoryNavigation'), { ssr: false });
+const DateFilter = dynamic(() => import('@/components/DateFilter'), { ssr: false });
 
 const NavigationBar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('');
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
+
+  React.useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -33,6 +40,27 @@ const NavigationBar: React.FC = () => {
     }
     const queryString = new URLSearchParams(query).toString();
     router.push(`/search?${queryString}`);
+    toggleDrawer();
+  };
+
+  const handleSignOut = async () => {
+    try {
+      logout();
+      setUser(null);
+      toast.success('Logout realizado com sucesso!');
+      toggleDrawer();
+    } catch (error) {
+      toast.error('Erro ao fazer logout');
+    }
+  };
+
+  const handleAdminAccess = () => {
+    router.push('/admin');
+    toggleDrawer();
+  };
+
+  const handleLoginAccess = () => {
+    router.push('/login');
     toggleDrawer();
   };
 
@@ -77,7 +105,7 @@ const NavigationBar: React.FC = () => {
                 <Typography variant="h6">Histórico</Typography>
               </ListItem>
               <ListItem>
-                <HistoryNavigation />
+                <DateFilter />
               </ListItem>
               <Divider />
               <ListItem>
@@ -86,6 +114,52 @@ const NavigationBar: React.FC = () => {
               <ListItem>
                 <NewsLetter />
               </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="h6">Conta</Typography>
+              </ListItem>
+              {user ? (
+                <>
+                  <ListItem>
+                    <Typography variant="body2" color="text.secondary">
+                      Olá, {user.username || 'Usuário'}!
+                    </Typography>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      startIcon={<AdminIcon />}
+                      onClick={handleAdminAccess}
+                      sx={{ mb: 1 }}
+                    >
+                      Painel Admin
+                    </Button>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="error"
+                      startIcon={<LogoutIcon />}
+                      onClick={handleSignOut}
+                    >
+                      Sair
+                    </Button>
+                  </ListItem>
+                </>
+              ) : (
+                <ListItem>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    startIcon={<LoginIcon />}
+                    onClick={handleLoginAccess}
+                  >
+                    Entrar
+                  </Button>
+                </ListItem>
+              )}
             </List>
           </Box>
         </Box>

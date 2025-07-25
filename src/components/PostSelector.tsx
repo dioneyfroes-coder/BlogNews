@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Box, Typography, Select, MenuItem, CircularProgress, SelectChangeEvent } from '@mui/material';
 import { Post } from '../types';
 
@@ -6,10 +6,16 @@ interface PostSelectorProps {
   posts: Post[];
   loading: boolean;
   handlePostSelect: (event: SelectChangeEvent<string>) => void;
+  selectedPostId?: string | null;
 }
 
-const PostSelector: React.FC<PostSelectorProps> = ({ posts, loading, handlePostSelect }) => {
-  const [selectedPost, setSelectedPost] = useState('');
+const PostSelector: React.FC<PostSelectorProps> = ({ posts, loading, handlePostSelect, selectedPostId }) => {
+  const [selectedPost, setSelectedPost] = useState(selectedPostId || '');
+
+  // Sincronizar estado quando selectedPostId mudar
+  useEffect(() => {
+    setSelectedPost(selectedPostId || '');
+  }, [selectedPostId]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;

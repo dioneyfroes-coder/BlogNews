@@ -17,13 +17,28 @@ const nextConfig = {
         hostname: 'i.ibb.co',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
       // Adicione outros domínios conforme necessário
     ],
   },
-  webpack(config, { isServer }) {
+  webpack(config, { isServer, dev }) {
     if (process.env.NODE_ENV === 'production') {
       config.devtool = false; // Desabilita source maps em produção
     }
+    
+    // Resolver problemas de path no desenvolvimento
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: ['**/node_modules/**', '**/.git/**', '**/.next/**'],
+      };
+    }
+    
     return config;
   },
 };

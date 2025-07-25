@@ -8,6 +8,10 @@ const PostSchema = new mongoose.Schema({
   author: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
+  published: { type: Boolean, default: true }, // Campo para controlar se o post está publicado
+  views: { type: Number, default: 0 }, // Campo para contagem de visualizações
+  tags: { type: [String], default: [] }, // Campo para tags do post
+  excerpt: { type: String, default: '' }, // Campo para resumo do post
   comments: [
     {
       author: String,

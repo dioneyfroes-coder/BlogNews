@@ -3,37 +3,35 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Container, Grid } from '@mui/material';
-import NavigationBar from '@/components/NavigationBar';
+import { Container, Grid, Typography, Box } from '@mui/material';
 import PostCard from '@/components/PostCard';
-import { Post } from '@/types';
+
+// Configuração para forçar renderização apenas no cliente
+export const dynamic = 'force-dynamic';
 
 const Home: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Buscar posts da API
     const fetchPosts = async () => {
       try {
-        console.log('Buscando posts...');
         const response = await fetch('/api/posts');
-        console.log('Resposta da API:', response.status);
+        if (!response.ok) {
+          throw new Error('Erro ao buscar posts');
+        }
         
-        if (response.ok) {
-          const result = await response.json();
-          console.log('Dados recebidos:', result);
-          
-          // A API retorna { success: true, data: posts }
-          if (result.success && result.data) {
-            setPosts(result.data);
-            console.log('Posts carregados:', result.data.length);
-          }
+        const data = await response.json();
+        if (data.success && data.data) {
+          setPosts(data.data);
         } else {
-          console.error('Erro na resposta da API:', response.status);
+          setPosts([]);
         }
       } catch (error) {
-        console.error('Erro ao buscar posts:', error);
+        console.error('Erro ao carregar posts:', error);
+        setError(error instanceof Error ? error.message : 'Erro desconhecido');
+        setPosts([]);
       } finally {
         setLoading(false);
       }
@@ -44,33 +42,65 @@ const Home: React.FC = () => {
 
   if (loading) {
     return (
-      <Container component="main">
-        <NavigationBar />
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <Container component="main" sx={{ mt: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Home
+        </Typography>
+        <Typography>
           Carregando posts...
-        </div>
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container component="main" sx={{ mt: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Home
+        </Typography>
+        <Typography color="error">
+          Erro ao carregar posts: {error}
+        </Typography>
       </Container>
     );
   }
 
   return (
-    <Container component="main">
-      <NavigationBar />
-      <Grid container spacing={3}>
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <Grid item xs={12} key={post._id}>
-              <PostCard post={post} />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={12}>
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
-              Nenhum post encontrado.
-            </div>
-          </Grid>
+    <Container component="main" maxWidth="lg">
+      <Box sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Últimas Notícias
+        </Typography>
+        
+        {loading && (
+          <Typography>
+            Carregando posts...
+          </Typography>
         )}
-      </Grid>
+
+        {error && (
+          <Typography color="error">
+            Erro ao carregar posts: {error}
+          </Typography>
+        )}
+
+        {!loading && !error && posts && posts.length > 0 && (
+          <Box sx={{ mt: 3 }}>
+            {posts.map((post) => (
+              <Box key={post._id} sx={{ mb: 2 }}>
+                <PostCard post={post} />
+              </Box>
+            ))}
+          </Box>
+        )}
+
+        {!loading && !error && (!posts || posts.length === 0) && (
+          <Typography align="center" sx={{ py: 4 }}>
+            Nenhum post encontrado.
+          </Typography>
+        )}
+      </Box>
     </Container>
   );
 };

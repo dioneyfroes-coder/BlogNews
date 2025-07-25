@@ -11,6 +11,8 @@ const SearchContent = () => {
   const searchParams = useSearchParams();
   const category = searchParams?.get('category');
   const q = searchParams?.get('q');
+  const date = searchParams?.get('date');
+  const filterByDate = searchParams?.get('filterByDate');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,18 +21,36 @@ const SearchContent = () => {
       setLoading(true);
       try {
         let res;
-        if (q) {
+        if (filterByDate === 'true' && date) {
+          // Busca por data específica
+          res = await fetch(`/api/grouped-posts`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.data[date]) {
+              setPosts(data.data[date]);
+            } else {
+              setPosts([]);
+            }
+          }
+        } else if (q) {
           res = await fetch(`/api/search?q=${q}`);
+          if (res) {
+            const data = await res.json();
+            if (data.success) {
+              setPosts(data.data);
+            } else {
+              setPosts([]);
+            }
+          }
         } else if (category) {
           res = await fetch(`/api/categoryFilter?category=${category}`);
-        }
-        
-        if (res) {
-          const data = await res.json();
-          if (data.success) {
-            setPosts(data.data);
-          } else {
-            setPosts([]);
+          if (res) {
+            const data = await res.json();
+            if (data.success) {
+              setPosts(data.data);
+            } else {
+              setPosts([]);
+            }
           }
         } else {
           setPosts([]);
@@ -43,12 +63,24 @@ const SearchContent = () => {
     };
 
     fetchPosts();
-  }, [category, q]);
+  }, [category, q, date, filterByDate]);
+
+  const getPageTitle = () => {
+    if (filterByDate === 'true' && date) {
+      const [year, month, day] = date.split('-');
+      return `Posts de ${day}/${month}/${year}`;
+    } else if (category) {
+      return `Posts na categoria: ${category}`;
+    } else if (q) {
+      return `Resultados da pesquisa: ${q}`;
+    }
+    return 'Busca';
+  };
 
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        {category ? `Posts na categoria: ${category}` : `Resultados da pesquisa: ${q}`}
+        {getPageTitle()}
       </Typography>
       {loading ? (
         <Typography>Carregando...</Typography>

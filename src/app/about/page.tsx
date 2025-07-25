@@ -1,143 +1,253 @@
+// src/app/about/page.tsx
+/**
+ * Página Sobre (Pública)
+ * @description Exibe informações sobre o blog sem funcionalidades de edição
+ */
+
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { TextField, Box, Typography, Button, Grid } from '@mui/material';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
-import { WhatsApp } from '@mui/icons-material';
-import ImageThumbnail from '@/components/ImageThumbnail';
-import useAboutData from '@/hooks/useAboutData';
-import sanitizeAndFixHtml from '@/utils/sanitizeAndFixHtml';
-import SocialLinks from '@/components/SocialLinks';
+import React from 'react';
+import {
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  Box,
+  Grid,
+  Paper,
+  IconButton,
+  Stack,
+} from '@mui/material';
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  LinkedIn,
+  YouTube,
+  Email,
+  Phone,
+  WhatsApp,
+  LocationOn,
+} from '@mui/icons-material';
+import useAboutData from '@/lib/hooks/useAboutData';
 
-const QuillNoSSRWrapper = dynamic(() => import('react-quill'), { ssr: false });
-
-const AboutPage = () => {
-  const { data: session } = useSession();
-  const { aboutData, setAboutData, saveAboutData } = useAboutData();
-  const [sanitizedHtml, setSanitizedHtml] = useState('');
-
-  useEffect(() => {
-    if (aboutData?.text) {
-      setSanitizedHtml(sanitizeAndFixHtml(aboutData.text));
-    }
-  }, [aboutData]);
-
-  if (!aboutData) {
-    return <Typography>Carregando...</Typography>;
-  }
+/**
+ * Componente principal da página About
+ */
+export default function AboutPage() {
+  const { aboutData } = useAboutData();
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      {/* Cabeçalho */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom align="center">
+          {aboutData.title || 'Sobre Nós'}
+        </Typography>
+      </Box>
+
+      {/* Conteúdo Principal */}
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <ImageThumbnail imageUrl={aboutData.imageURL} altText="About Us" />
-          {session && (
-            <Box mt={2}>
-              <TextField
-                label="URL da Imagem"
-                value={aboutData.imageURL}
-                onChange={(e) => setAboutData({ ...aboutData, imageURL: e.target.value })}
-                fullWidth
-                margin="normal"
+        {/* Imagem em Destaque */}
+        {aboutData.imageURL && (
+          <Grid item xs={12} md={5}>
+            <Paper elevation={2} sx={{ overflow: 'hidden', borderRadius: 2 }}>
+              <Box
+                component="img"
+                src={aboutData.imageURL}
+                alt="Sobre nós"
+                sx={{
+                  width: '100%',
+                  height: 300,
+                  objectFit: 'cover',
+                }}
               />
-            </Box>
-          )}
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {session ? (
-              <>
-                <TextField
-                  label="Título"
-                  value={aboutData.title}
-                  onChange={(e) => setAboutData({ ...aboutData, title: e.target.value })}
-                  fullWidth
-                  margin="normal"
+            </Paper>
+          </Grid>
+        )}
+
+        {/* Conteúdo Textual */}
+        <Grid item xs={12} md={aboutData.imageURL ? 7 : 12}>
+          <Card elevation={1} sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 3 }}>
+              {aboutData.text ? (
+                <Box
+                  dangerouslySetInnerHTML={{ __html: aboutData.text }}
+                  sx={{
+                    '& h1, & h2, & h3, & h4, & h5, & h6': {
+                      color: 'primary.main',
+                      mb: 2,
+                    },
+                    '& p': {
+                      mb: 2,
+                      lineHeight: 1.7,
+                    },
+                    '& ul, & ol': {
+                      pl: 3,
+                      mb: 2,
+                    },
+                    '& blockquote': {
+                      borderLeft: '4px solid',
+                      borderColor: 'primary.main',
+                      pl: 2,
+                      fontStyle: 'italic',
+                      color: 'text.secondary',
+                    },
+                  }}
                 />
-                <Box mt={2}>
-                  <QuillNoSSRWrapper
-                    value={aboutData.text}
-                    onChange={(value) => setAboutData({ ...aboutData, text: value })}
-                    theme="snow"
-                  />
-                </Box>
-                <Box mt={2}>
-                  <TextField
-                    label="Telefone"
-                    value={aboutData.phone}
-                    onChange={(e) => setAboutData({ ...aboutData, phone: e.target.value })}
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-                <Box mt={2}>
-                  <TextField
-                    label="WhatsApp"
-                    value={aboutData.whatsapp}
-                    onChange={(e) => setAboutData({ ...aboutData, whatsapp: e.target.value })}
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-                <Box mt={2}>
-                  <TextField
-                    label="Endereço"
-                    value={aboutData.address}
-                    onChange={(e) => setAboutData({ ...aboutData, address: e.target.value })}
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-                <Box mt={2}>
-                  <TextField
-                    label="Email"
-                    value={aboutData.email}
-                    onChange={(e) => setAboutData({ ...aboutData, email: e.target.value })}
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-                <Box mt={2}>
-                  <SocialLinks
-                    socialLinks={aboutData.socialLinks}
-                    setSocialLinks={(newLinks) => setAboutData({ ...aboutData, socialLinks: newLinks })}
-                    isEditable={true}
-                  />
-                </Box>
-                <Box mt={4}>
-                  <Button variant="contained" color="primary" onClick={saveAboutData}>
-                    Salvar
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <>
-                <Typography variant="h5">{aboutData.title}</Typography>
-                <Box mt={2} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
-                <Box mt={2}>
-                  <WhatsApp /> {aboutData.whatsapp}
-                </Box>
-                <Box mt={2}>
-                  <Typography>{aboutData.phone}</Typography>
-                </Box>
-                <Box mt={2}>
-                  <Typography>{aboutData.address}</Typography>
-                </Box>
-                <Box mt={2}>
-                  <Typography>{aboutData.email}</Typography>
-                </Box>
-                <Box mt={2}>
-                  <SocialLinks socialLinks={aboutData.socialLinks} isEditable={false} />
-                </Box>
-              </>
-            )}
-          </Box>
+              ) : (
+                <Typography variant="body1" color="text.secondary">
+                  Conteúdo não disponível no momento.
+                </Typography>
+              )}
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
-    </Box>
-  );
-};
 
-export default AboutPage;
+      {/* Informações de Contato */}
+      {(aboutData.phone || aboutData.whatsapp || aboutData.email || aboutData.address) && (
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h5" component="h3" gutterBottom align="center">
+            Entre em Contato
+          </Typography>
+          
+          <Grid container spacing={3} sx={{ mt: 2 }}>
+            {aboutData.phone && (
+              <Grid item xs={12} sm={6} md={3}>
+                <Card elevation={1}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <Phone color="primary" sx={{ mb: 1 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      Telefone
+                    </Typography>
+                    <Typography variant="body1">
+                      {aboutData.phone}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+
+            {aboutData.whatsapp && (
+              <Grid item xs={12} sm={6} md={3}>
+                <Card elevation={1}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <WhatsApp color="primary" sx={{ mb: 1 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      WhatsApp
+                    </Typography>
+                    <Typography variant="body1">
+                      {aboutData.whatsapp}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+
+            {aboutData.email && (
+              <Grid item xs={12} sm={6} md={3}>
+                <Card elevation={1}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <Email color="primary" sx={{ mb: 1 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      E-mail
+                    </Typography>
+                    <Typography variant="body1">
+                      {aboutData.email}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+
+            {aboutData.address && (
+              <Grid item xs={12} sm={6} md={3}>
+                <Card elevation={1}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <LocationOn color="primary" sx={{ mb: 1 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      Endereço
+                    </Typography>
+                    <Typography variant="body1">
+                      {aboutData.address}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+      )}
+
+      {/* Redes Sociais */}
+      {aboutData.socialLinks && aboutData.socialLinks.some(link => link.trim()) && (
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h5" component="h3" gutterBottom align="center">
+            Siga-nos nas Redes Sociais
+          </Typography>
+          
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            justifyContent="center" 
+            flexWrap="wrap"
+            sx={{ mt: 3 }}
+          >
+            {aboutData.socialLinks[0] && (
+              <IconButton
+                component="a"
+                href={aboutData.socialLinks[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+                sx={{ bgcolor: 'action.hover' }}
+              >
+                <Facebook />
+              </IconButton>
+            )}
+            
+            {aboutData.socialLinks[1] && (
+              <IconButton
+                component="a"
+                href={aboutData.socialLinks[1]}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+                sx={{ bgcolor: 'action.hover' }}
+              >
+                <Instagram />
+              </IconButton>
+            )}
+            
+            {aboutData.socialLinks[2] && (
+              <IconButton
+                component="a"
+                href={aboutData.socialLinks[2]}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+                sx={{ bgcolor: 'action.hover' }}
+              >
+                <Twitter />
+              </IconButton>
+            )}
+            
+            {aboutData.socialLinks[3] && (
+              <IconButton
+                component="a"
+                href={aboutData.socialLinks[3]}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+                sx={{ bgcolor: 'action.hover' }}
+              >
+                <LinkedIn />
+              </IconButton>
+            )}
+          </Stack>
+        </Box>
+      )}
+    </Container>
+  );
+}
